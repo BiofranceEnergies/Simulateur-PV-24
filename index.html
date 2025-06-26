@@ -117,6 +117,22 @@
         font-size: 15px;
       }
     }
+        @media (max-width: 600px) {
+      #blocImagePV > div {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      #blocImagePV img {
+        max-width: 100%;
+      }
+
+      #blocImagePV ul {
+        text-align: left;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -151,11 +167,29 @@
 
     <p><em>Les résultats apparaîtront ici après votre simulation.</em></p>
   </div>
+<div id="blocImagePV" style="display: none; background: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); margin-bottom: 20px;">
+  <div style="display: flex; align-items: flex-start; gap: 20px;">
+    <img src="https://github.com/BiofranceEnergies/biofrance-images/blob/ed9f69eca63582630e403b6f239e7190254bce90/pano%20500w.webp?raw=true" alt="Panneaux photovoltaïques 500W" style="max-width: 200px; height: auto; border-radius: 6px;">
+    
+    <div style="font-size: 0.95em; color: #333;">
+      <h3 style="margin: 0 0 10px 0; font-size: 1.1em; color: #0056d6;">FLASH 500 Half-Cut Glass-Glass Topcon</h3>
+      <ul style="margin: 0; padding-left: 18px;">
+        <li><strong>Panneau compact :</strong> 1950 mm x 1134 mm x 30 mm, 27,1 Kg, 2,2 m²</li>
+        <li>Panneau bi-verre et bi-facial</li>
+        <li>Gain de puissance de 10 % potentiel grâce à la bifacialité</li>
+        <li>Garantie 30 ans</li>
+      </ul>
+    </div>
+  </div>
+</div>
 
+
+</div>
   <div id="resultat" class="result" style="display: none;">
 
     <p><em>Veuillez entrer votre consommation et votre facture pour voir le gain estimé.</em></p>
   </div>
+
 
   <div id="offre" style="margin-top: 20px; display: none;">
     <div style="background: #f5f5f5; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
@@ -295,6 +329,8 @@
        document.getElementById('recap').style.display = 'block';
 document.getElementById('resultat').style.display = 'block';
 document.getElementById('blocMail').style.display = 'block';
+document.getElementById('blocImagePV').style.display = 'block';
+
 
 
 document.getElementById('recap').innerHTML = `

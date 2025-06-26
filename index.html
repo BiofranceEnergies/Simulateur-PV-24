@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulation Photovoltaïque</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #dbe0e6;
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+      color: #2c2c2c;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      font-size: 26px;
+      margin-bottom: 15px;
+    }
+
+    .intro {
+      background: #333b45;
+      padding: 18px 22px;
+      border-left: 4px solid #ffc107;
+      color: #ffffff;
+      font-size: 17px;
+      line-height: 1.6;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .intro strong {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .form-section {
+      background: #2c2f34;
+      padding: 25px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      color: white;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #e2e2e2;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 6px;
+      background: #444;
+      color: #fff;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #1f1f1f;
+      color: white;
+      border: 1px solid #999;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .recap {
+      background: #f5f5f5;
+      border-radius: 5px;
+      padding: 18px;
+      margin-bottom: 20px;
+      color: #333;
+      min-height: 160px;
+    }
+
+    .result {
+      background: #f5f5f5;
+      border-radius: 5px;
+      padding: 18px;
+      color: #1c4424;
+      min-height: 260px;
+    }
+
+    .result p {
+      margin-bottom: 10px;
+    }
+
+    .result p:last-child {
+      font-style: italic;
+      font-size: 0.95rem;
+      margin-top: 15px;
+    }
+
+    @media (max-width: 500px) {
+      body {
+        padding: 10px;
+      }
+      h1 {
+        font-size: 22px;
+      }
+      .intro {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1><h1>Comprenez en 3 secondes ce que le solaire peut vraiment vous faire économiser.</h1>
+</h1>
+
+<div class="intro">
+    <p><strong>⚡ Un simulateur unique, pensé pour vous donner des réponses, pas pour collecter vos coordonnées.</strong></p>
+    <p>📍 Code postal, ⚡ consommation, 💶 facture… en 3 secondes, votre économie solaire estimée s’affiche directement à l’écran.</p>
+    <p>❌ Aucun formulaire à valider. 📞 Aucun appel à attendre.</p>
+    <p>💡 Propulsé par un moteur de calcul intelligent inspiré de notre outil professionnel, basé sur les données locales de production solaire.</p>
+    <p><strong>ℹ️ Chez Biofrance Énergies, vous méritez une info claire, fiable et immédiate avant de prendre une décision.</strong></p>
+
+  </div>
+
+
+
+  <div class="form-section">
+    <label for="codePostal">📍 Votre code postal</label>
+    <input type="text" id="codePostal" placeholder="Ex : 75001">
+      
+    <label for="conso">🔌 Consommation annuelle (kWh)</label>
+    <input type="number" id="conso" placeholder="Ex : 7200">
+
+    <label for="facture">💶 Facture annuelle (€)</label>
+    <input type="number" id="facture" placeholder="Ex : 1680">
+
+    <button id="simuler">📊 Lancer la simulation</button>
+  </div>
+
+  <div id="recap" class="recap" style="display: none;">
+
+    <p><em>Les résultats apparaîtront ici après votre simulation.</em></p>
+  </div>
+
+  <div id="resultat" class="result" style="display: none;">
+
+    <p><em>Veuillez entrer votre consommation et votre facture pour voir le gain estimé.</em></p>
+  </div>
+
+  <div id="offre" style="margin-top: 20px; display: none;">
+    <div style="background: #f5f5f5; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
+      <strong style="color: #0056d6; font-size: 1.1em; display: block; margin-bottom: 8px;">Dès la première année</strong>
+      <p>Vous réalisez une économie d’environ <span id="ecoMensuelle"></span> par mois, grâce à l’autoconsommation et à la valorisation de votre surplus.</p>
+    </div>
+    <div style="background: #f5f5f5; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
+      <strong style="color: #0056d6; font-size: 1.1em; display: block; margin-bottom: 8px;">Ce que nous vous proposons</strong>
+      <p>Remplacer ce paiement mensuel fait à votre fournisseur d’électricité par une solution concrète :</p>
+      <p id="mensualiteTexte"></p>
+    </div>
+    <div style="background: #f5f5f5; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
+      <strong style="color: #0056d6; font-size: 1.1em; display: block; margin-bottom: 8px;">Et chaque année</strong>
+      <p>Le prix de l’électricité augmente, vos économies aussi. Votre mensualité, elle, reste fixe.</p>
+    </div>
+    <div style="background: #f5f5f5; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
+      <strong style="color: #0056d6; font-size: 1.1em; display: block; margin-bottom: 8px;">Projection sur 15 ans</strong>
+      <p>Votre économie cumulée est estimée à <span id="eco15ans"></span>.</p>
+    </div>
+    <div style="background: #e6f3e6; border-radius: 10px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
+      <strong style="color: #0056d6; font-size: 1.1em; display: block; margin-bottom: 8px;">Vous ne subissez plus votre facture</strong>
+      <p>Vous investissez dans votre propre électricité. C’est un choix durable, rentable et intelligent. De plus vous valorisez votre habitation en cas de revente de celle-ci.</p>
+    </div>
+    <p style="font-size: 0.85em; color: #444; margin-top: 15px;" id="mentions"></p>
+  </div>
+  <!-- À coller immédiatement APRÈS ceci :
+<p style="font-size: 0.85em; color: #444; margin-top: 15px;" id="mentions"></p>
+</div> -->
+
+<div id="blocMail" style="display: none; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-top: 30px; max-width: 700px; margin-left: auto; margin-right: auto;">
+
+  <p style="font-size: 1.2em; font-weight: bold; margin-bottom: 8px;">
+    📩 Recevoir cette estimation par mail ?
+  </p>
+  <p style="margin-bottom: 20px;">
+    Pour garder une trace de cette simulation ou en discuter plus tard, entrez simplement votre email.<br>
+    <strong>C’est immédiat, sans engagement.</strong>
+  </p>
+  <form>
+    <input type="email" placeholder="Votre adresse email" required
+      style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 6px; border: none; background: #444; color: #fff; font-size: 1em; box-sizing: border-box;" />
+    
+    <input type="tel" placeholder="(Facultatif) Votre téléphone"
+      style="width: 100%; padding: 12px; margin-bottom: 18px; border-radius: 6px; border: none; background: #444; color: #fff; font-size: 1em; box-sizing: border-box;" />
+    
+    <button type="submit"
+      style="width: 100%; background: #0056d6; color: white; border: none; padding: 14px; font-size: 1.05em; border-radius: 8px; font-weight: bold; cursor: pointer;">
+      Recevoir mon estimation
+    </button>
+  </form>
+  <div style="margin-top: 20px; font-size: 0.9em; color: #444;">
+    <p style="margin: 10px 0;">⭐️⭐️⭐️⭐️⭐️ <strong>4,9/5 sur Google</strong> – Plus de 400 foyers accompagnés en France.</p>
+    <p style="margin: 10px 0;">🔒 Vos données ne seront jamais revendues. Aucun démarchage automatique.</p>
+  </div>
+</div>
+
+
+  <script>
+    const offres = {
+      "3 kWc": { prix: 8900, mensualite: 66.64, total: 11994.23 },
+      "4,5 kWc": { prix: 10900, mensualite: 81.62, total: 14689.25 },
+      "6 kWc": { prix: 14900, mensualite: 111.57, total: 20080.56 },
+      "7,5 kWc": { prix: 16900, mensualite: 126.54, total: 22776.50 },
+      "9 kWc": { prix: 18900, mensualite: 141.52, total: 25471.66 }
+    };
+
+    function afficherBlocFinancement(scenario, economieMensuelle, gain15ans) {
+      const offre = offres[scenario.puissance];
+
+      if (offre) {
+        document.getElementById("ecoMensuelle").innerHTML = `<strong>${Math.round(economieMensuelle).toLocaleString('fr-FR')} €</strong>`;
+        document.getElementById("eco15ans").innerHTML = `<strong>${Math.round(gain15ans).toLocaleString('fr-FR')} €</strong>`;
+
+        document.getElementById("mensualiteTexte").innerHTML = `
+  <strong>Une mensualité fixe de ${offre.mensualite.toFixed(2).replace('.', ',')} €*</strong>
+  pour financer cette installation <strong>clé en main</strong> — et ainsi devenir
+  <strong>propriétaire de votre production solaire</strong>.`;
+
+        document.getElementById("mentions").innerText =
+          `* Exemple : installation ${scenario.puissance} à ${offre.prix.toLocaleString('fr-FR')} €, ` +
+          `financement sur 180 mois au TAEG fixe de 3,96 %, mensualité ${offre.mensualite.toFixed(2).replace('.', ',')} € (hors assurance). ` +
+          `Coût total du financement hors assurance : ${offre.total.toLocaleString('fr-FR')} €. ` +
+          `Financement proposé par notre partenaire Projexio, sous réserve d’acceptation. Un crédit vous engage et doit être remboursé. ` +
+          `Vérifiez vos capacités de remboursement avant de vous engager.`;
+
+        document.getElementById("offre").style.display = "block";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      const scenarios = [
+        { puissance: "3 kWc", prod: 3650, seuil: 4000, panels: 6 },
+        { puissance: "4,5 kWc", prod: 5432, seuil: 6000, panels: 9 },
+        { puissance: "6 kWc", prod: 7243, seuil: 8000, panels: 12 },
+        { puissance: "7,5 kWc", prod: 9054, seuil: 10000, panels: 15 },
+        { puissance: "9 kWc", prod: 10864, seuil: 12000, panels: 18 }
+      ];
+
+      document.getElementById("simuler").addEventListener("click", function calculerSimulation() {
+        const conso = parseFloat(document.getElementById('conso').value);
+        const facture = parseFloat(document.getElementById('facture').value);
+
+        if (isNaN(conso) || isNaN(facture) || conso <= 0 || facture <= 0) {
+          alert("Merci de remplir correctement les deux champs.");
+          return;
+        }
+
+        const prixKwh = facture / conso;
+        const scenario = [...scenarios].reverse().find(s => s.prod <= conso) || scenarios[0];
+        scenarios.reverse();
+
+        const autoKwh = scenario.prod * 0.6;
+        const stockKwh = scenario.prod * 0.4;
+        const acheminement = 0.05;
+
+        const factureAvant = conso * prixKwh;
+        const autoValue = autoKwh * prixKwh;
+        const stockValue = stockKwh * prixKwh;
+        const coutAcheminement = stockKwh * acheminement;
+        const factureApres = factureAvant - autoValue - stockValue + coutAcheminement;
+        const economieAnnuelle = factureAvant - factureApres;
+        const economieAnnuelleCorrigee = Math.min(economieAnnuelle, facture);
+        const economieMensuelle = economieAnnuelleCorrigee / 12;
+
+        let gain15ans = 0;
+        let prixActuel = prixKwh;
+        for (let i = 0; i < 15; i++) {
+          const autoVal = autoKwh * prixActuel;
+          const stockVal = stockKwh * prixActuel;
+          const coutAch = stockKwh * acheminement;
+          const factureAv = conso * prixActuel;
+          const factureAp = factureAv - autoVal - stockVal + coutAch;
+          const economie = factureAv - factureAp;
+          gain15ans += economie;
+          prixActuel *= 1.05;
+        }
+       document.getElementById('recap').style.display = 'block';
+document.getElementById('resultat').style.display = 'block';
+document.getElementById('blocMail').style.display = 'block';
+
+
+document.getElementById('recap').innerHTML = `
+  <p>Consommation annuelle : ${conso.toLocaleString('fr-FR')} kWh</p>
+  <p>Prix du kWh : ${prixKwh.toFixed(3)} €</p>
+  <p>Facture annuelle : ${facture.toLocaleString('fr-FR')} €</p>
+  <p>Production annuelle estimée : ${scenario.prod.toLocaleString('fr-FR')} kWh</p>
+  <p>Autoconsommation : ${autoKwh.toLocaleString('fr-FR')} kWh (60 %)</p>
+  <p>Surplus valorisé via batterie virtuelle : ${stockKwh.toLocaleString('fr-FR')} kWh (40 %)</p>
+  <p>Puissance installée : ${scenario.puissance} — ${scenario.panels} panneaux photovoltaïques de 500 W</p>`;
+
+
+        document.getElementById('resultat').innerHTML = `
+          <p><strong>Puissance recommandée :</strong> ${scenario.puissance}</p>
+          <p><strong>Gain estimé la 1ère année :</strong> ${Math.round(economieAnnuelleCorrigee).toLocaleString('fr-FR')} €<br>
+          <span style="font-weight: normal;">soit environ ${Math.round(economieMensuelle).toLocaleString('fr-FR')} € par mois</span></p>
+          <p><strong>Économie cumulée sur 15 ans :</strong> ${Math.round(gain15ans).toLocaleString('fr-FR')} €</p>
+          <p>✅ <em>Voici l’économie réalisable grâce à l’autoconsommation solaire. Et ce n’est qu’une première estimation ! Une étude gratuite et personnalisée peut maintenant affiner votre gain réel selon votre toiture.</em></p>`;
+
+        afficherBlocFinancement(scenario, economieMensuelle, gain15ans);
+      });
+    });
+  </script>
+</body>
+</html>

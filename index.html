@@ -253,16 +253,16 @@
 
 
   <script>
-    const offres = {
-      "3 kWc": { prix: 8900, mensualite: 66.64, total: 11994.23 },
-      "4,5 kWc": { prix: 10900, mensualite: 81.62, total: 14689.25 },
-      "6 kWc": { prix: 14900, mensualite: 111.57, total: 20080.56 },
-      "7,5 kWc": { prix: 16900, mensualite: 126.54, total: 22776.50 },
-      "9 kWc": { prix: 18900, mensualite: 141.52, total: 25471.66 }
-    };
+    
 
     function afficherBlocFinancement(scenario, economieMensuelle, gain15ans) {
-      const offre = offres[scenario.puissance];
+      const offre = {
+  prix: scenario.prix,
+  mensualite: scenario.mensualite,
+  taeg: scenario.taeg,
+  total: scenario.total
+};
+
 
       if (offre) {
         document.getElementById("ecoMensuelle").innerHTML = `<strong>${Math.round(economieMensuelle).toLocaleString('fr-FR')} €</strong>`;
@@ -296,13 +296,18 @@ fetch(url)
       puissance: item.Puissance,
       prod: parseInt(item.Prod),
       seuil: parseInt(item.Seuil),
-      panels: parseInt(item.Panels)
+      panels: parseInt(item.Panels),
+      prix: parseFloat(item.Prix),
+      mensualite: parseFloat(item.Mensualite),
+      taeg: parseFloat(item.Taeg),
+      total: parseFloat(item.Total)
     }));
   })
   .catch(error => {
     console.error("Erreur lors du chargement des scénarios :", error);
     alert("Erreur lors du chargement des données du simulateur.");
   });
+
 
       document.getElementById("simuler").addEventListener("click", function calculerSimulation() {
         const conso = parseFloat(document.getElementById('conso').value);
@@ -373,4 +378,3 @@ document.getElementById('recap').innerHTML = `
   </script>
 </body>
 </html>
-

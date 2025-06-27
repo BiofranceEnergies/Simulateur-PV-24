@@ -273,13 +273,13 @@
   pour financer cette installation <strong>clé en main</strong> — et ainsi devenir
   <strong>propriétaire de votre production solaire</strong>.`;
 
-        document.getElementById("mentions").innerText =
-          `* Exemple : installation ${scenario.puissance} à ${offre.prix.toLocaleString('fr-FR')} €, ` +
-          ``financement sur 180 mois au TAEG fixe de ${offre.taeg.toFixed(2).replace('.', ',')} %, mensualité ${offre.mensualite.toFixed(2).replace('.', ',')} € (hors assurance).`
- +
-          `Coût total du financement hors assurance : ${offre.total.toLocaleString('fr-FR')} €. ` +
-          `Financement proposé par notre partenaire Projexio, sous réserve d’acceptation. Un crédit vous engage et doit être remboursé. ` +
-          `Vérifiez vos capacités de remboursement avant de vous engager.`;
+       document.getElementById("mentions").innerText = `
+* Exemple : installation ${scenario.puissance} à ${offre.prix.toLocaleString('fr-FR')} €
+financement sur 180 mois au TAEG fixe de ${offre.taeg.toFixed(2).replace('.', ',')} %, mensualité ${offre.mensualite.toFixed(2).replace('.', ',')} € (hors assurance).
+Coût total du financement hors assurance : ${offre.total.toLocaleString('fr-FR')} €.
+Financement proposé par notre partenaire Projexio, sous réserve d’acceptation. Un crédit vous engage et doit être remboursé.
+Vérifiez vos capacités de remboursement avant de vous engager.`;
+
 
         document.getElementById("offre").style.display = "block";
       }

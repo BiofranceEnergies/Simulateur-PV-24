@@ -285,13 +285,24 @@
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-      const scenarios = [
-        { puissance: "3 kWc", prod: 3650, seuil: 4000, panels: 6 },
-        { puissance: "4,5 kWc", prod: 5432, seuil: 6000, panels: 9 },
-        { puissance: "6 kWc", prod: 7243, seuil: 8000, panels: 12 },
-        { puissance: "7,5 kWc", prod: 9054, seuil: 10000, panels: 15 },
-        { puissance: "9 kWc", prod: 10864, seuil: 12000, panels: 18 }
-      ];
+      let scenarios = [];
+
+const url = "https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec";
+
+fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    scenarios = data.map(item => ({
+      puissance: item.Puissance,
+      prod: parseInt(item.Prod),
+      seuil: parseInt(item.Seuil),
+      panels: parseInt(item.Panels)
+    }));
+  })
+  .catch(error => {
+    console.error("Erreur lors du chargement des scénarios :", error);
+    alert("Erreur lors du chargement des données du simulateur.");
+  });
 
       document.getElementById("simuler").addEventListener("click", function calculerSimulation() {
         const conso = parseFloat(document.getElementById('conso').value);

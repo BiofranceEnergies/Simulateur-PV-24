@@ -190,7 +190,6 @@
 </div>
 
 
-</div>
   <div id="resultat" class="result" style="display: none;">
 
     <p><em>Veuillez entrer votre consommation et votre facture pour voir le gain estimé.</em></p>
@@ -340,13 +339,14 @@ document.getElementById('blocImagePV').style.display = 'block';
 
 
 document.getElementById('recap').innerHTML = `
-  <p>Consommation annuelle : ${conso.toLocaleString('fr-FR')} kWh</p>
+  <p>Votre consommation annuelle actuelle : ${conso.toLocaleString('fr-FR')} kWh</p>
+  <p>Votre facture annuelle actuelle : ${facture.toLocaleString('fr-FR')} €</p>
   <p>Prix du kWh : ${prixKwh.toFixed(3)} €</p>
-  <p>Facture annuelle : ${facture.toLocaleString('fr-FR')} €</p>
+  <p>Avec une puissance installée de : ${scenario.puissance} — ${scenario.panels} panneaux photovoltaïques de 500 W</p>
   <p>Production annuelle estimée : ${scenario.prod.toLocaleString('fr-FR')} kWh</p>
   <p>Autoconsommation : ${autoKwh.toLocaleString('fr-FR')} kWh (60 %)</p>
-  <p>Surplus valorisé via batterie virtuelle : ${stockKwh.toLocaleString('fr-FR')} kWh (40 %)</p>
-  <p>Puissance installée : ${scenario.puissance} — ${scenario.panels} panneaux photovoltaïques de 500 W</p>`;
+  <p>Surplus valorisé via batterie virtuelle : ${stockKwh.toLocaleString('fr-FR')} kWh (40 %)</p>`;
+
 
 
         document.getElementById('resultat').innerHTML = `
@@ -354,7 +354,7 @@ document.getElementById('recap').innerHTML = `
           <p><strong>Gain estimé la 1ère année :</strong> ${Math.round(economieAnnuelleCorrigee).toLocaleString('fr-FR')} €<br>
           <span style="font-weight: normal;">soit environ ${Math.round(economieMensuelle).toLocaleString('fr-FR')} € par mois</span></p>
           <p><strong>Économie cumulée sur 15 ans :</strong> ${Math.round(gain15ans).toLocaleString('fr-FR')} €</p>
-          <p>✅ <em>Voici l’économie réalisable grâce à l’autoconsommation solaire. Et ce n’est qu’une première estimation ! Une étude gratuite et personnalisée peut maintenant affiner votre gain réel selon votre toiture.</em></p>`;
+          <p>✅ <em>Voici l’économie réalisable grâce à l’autoconsommation solaire et au stockage virtuel. Et ce n’est qu’une première estimation ! Une étude gratuite et personnalisée peut maintenant affiner votre gain réel selon votre toiture.</em></p>`;
 
         afficherBlocFinancement(scenario, economieMensuelle, gain15ans);
       });

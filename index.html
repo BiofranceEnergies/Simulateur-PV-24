@@ -374,6 +374,44 @@ document.getElementById('recap').innerHTML = `
           <p>✅ <em>Voici l’économie réalisable grâce à l’autoconsommation solaire et au stockage virtuel. Et ce n’est qu’une première estimation ! Une étude gratuite et personnalisée peut maintenant affiner votre gain réel selon votre toiture.</em></p>`;
 
         afficherBlocFinancement(scenario, economieMensuelle, gain15ans);
+              document.querySelector("#blocMail form").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const email = this.querySelector('input[type="email"]').value;
+        const telephone = this.querySelector('input[type="tel"]').value;
+
+        const payload = {
+          codePostal: document.getElementById("codePostal").value,
+          conso: parseFloat(document.getElementById("conso").value),
+          facture: parseFloat(document.getElementById("facture").value),
+          production: scenario.prod,
+          economieAnnuelle: Math.round(economieAnnuelleCorrigee),
+          economieMensuelle: Math.round(economieMensuelle),
+          gain15ans: Math.round(gain15ans),
+          puissance: scenario.puissance,
+          panels: scenario.panels,
+          prix: scenario.prix,
+          mensualite: scenario.mensualite,
+          taeg: scenario.taeg,
+          total: scenario.total,
+          email: email,
+          telephone: telephone
+        };
+
+        fetch("https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec", {
+          method: "POST",
+          body: JSON.stringify(payload),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }).then(res => {
+          alert("✅ Votre estimation a bien été transmise.");
+        }).catch(err => {
+          console.error("Erreur lors de l'envoi vers Sheets :", err);
+          alert("❌ Une erreur est survenue. Merci de réessayer.");
+        });
+      });
+
       });
     });
   </script>

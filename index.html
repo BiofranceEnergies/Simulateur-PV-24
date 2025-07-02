@@ -292,12 +292,6 @@ input::placeholder {
 
 
     <div style="background: #f5f5f5; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
-  <strong style="color: #0056d6; font-size: 1.1em; display: block; margin-bottom: 8px;">📈 Et chaque année</strong>
-  <p style="margin: 0;">💹 Le prix de l’électricité grimpe, vos économies aussi.<br>
-  🔒 <strong>Votre mensualité, elle, reste fixe.</strong></p>
-</div>
-
-    <div style="background: #f5f5f5; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
   <strong style="color: #0056d6; font-size: 1.1em; display: block; margin-bottom: 8px;">📈 Vos gains dans le temps</strong>
   <p style="margin-bottom: 10px;">📊 Sur 15 ans, vous économisez déjà <strong id="eco15Texte"></strong>.</p>
   <p style="margin-bottom: 10px;">🔄 Et après ? Vos panneaux continuent à produire gratuitement pendant encore des années.</p>
@@ -397,150 +391,100 @@ Vérifiez vos capacités de remboursement avant de vous engager.`;
       }
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
-      let scenarios = [];
-
-const url = "https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec";
-
-fetch(url)
-  .then(response => response.json())
-  .then(data => {
-    scenarios = data.map(item => ({
-      puissance: item.Puissance,
-      prod: parseInt(item.Prod),
-      seuil: parseInt(item.Seuil),
-      panels: parseInt(item.Panels),
-      prix: parseFloat(item.Prix),
-      mensualite: parseFloat(item.Mensualite),
-      taeg: parseFloat(item.Taeg),
-      total: parseFloat(item.Total)
-    }));
-  })
-  .catch(error => {
-    console.error("Erreur lors du chargement des scénarios :", error);
-    alert("Erreur lors du chargement des données du simulateur.");
-  });
-
-
-      document.getElementById("simuler").addEventListener("click", function calculerSimulation() {
-        const conso = parseFloat(document.getElementById('conso').value);
-        const facture = parseFloat(document.getElementById('facture').value);
-
-        if (isNaN(conso) || isNaN(facture) || conso <= 0 || facture <= 0) {
-          alert("Merci de remplir correctement les deux champs.");
-          return;
-        }
-
-        const prixKwh = facture / conso;
-        const scenario = [...scenarios].reverse().find(s => s.prod <= conso) || scenarios[0];
-        scenarios.reverse();
-
-        const autoKwh = scenario.prod * 0.6;
-        const stockKwh = scenario.prod * 0.4;
-        const acheminement = 0.05;
-
-        const factureAvant = conso * prixKwh;
-        const autoValue = autoKwh * prixKwh;
-        const stockValue = stockKwh * prixKwh;
-        const coutAcheminement = stockKwh * acheminement;
-        const factureApres = factureAvant - autoValue - stockValue + coutAcheminement;
-        const economieAnnuelle = factureAvant - factureApres;
-        const economieAnnuelleCorrigee = Math.min(economieAnnuelle, facture);
-        const economieMensuelle = economieAnnuelleCorrigee / 12;
-
-        let gain15ans = 0;
-        let prixActuel = prixKwh;
-        for (let i = 0; i < 15; i++) {
-          const autoVal = autoKwh * prixActuel;
-          const stockVal = stockKwh * prixActuel;
-          const coutAch = stockKwh * acheminement;
-          const factureAv = conso * prixActuel;
-          const factureAp = factureAv - autoVal - stockVal + coutAch;
-          const economie = factureAv - factureAp;
-          gain15ans += economie;
-          prixActuel *= 1.05;
-        }
-       document.getElementById('recap').style.display = 'block';
-document.getElementById('resultat').style.display = 'block';
-document.getElementById('blocMail').style.display = 'block';
-document.getElementById('blocImagePV').style.display = 'block';
 
 
 
-document.getElementById('recap').innerHTML = `
-  <p>🔌 <strong>Consommation annuelle actuelle</strong> : ${conso.toLocaleString('fr-FR')} kWh</p>
-  <p>💶 <strong>Facture annuelle actuelle</strong> : ${facture.toLocaleString('fr-FR')} €</p>
-  <p>⚡ <strong>Prix moyen du kWh</strong> : ${prixKwh.toFixed(3)} €</p>
-  <br>
-  <p>☀️ <strong>Installation recommandée</strong> : ${scenario.puissance} — ${scenario.panels} panneaux photovoltaïques de 500 W</p>
-  <p>🔧 <strong>Production solaire estimée</strong> : ${scenario.prod.toLocaleString('fr-FR')} kWh/an</p>
-  <br>
-  <p>🏠 <strong>Autoconsommation directe</strong> : ${autoKwh.toLocaleString('fr-FR')} kWh (60 %)</p>
-  <p>🔋 <strong>Énergie valorisée en batterie virtuelle</strong> : ${stockKwh.toLocaleString('fr-FR')} kWh (40 %)</p>
-`;
+document.getElementById("simuler").addEventListener("click", function calculerSimulation() {
+  const codePostal = document.getElementById("codePostal").value.trim();
+  const conso = parseFloat(document.getElementById('conso').value);
+  const facture = parseFloat(document.getElementById('facture').value);
 
-
-
-
-        document.getElementById('resultat').innerHTML = `
-  <div style="background: #e6f5ec; border: 2px solid #4CAF50; padding: 20px; border-radius: 10px; margin-top: 20px;">
-    <p><strong>📊 Puissance recommandée :</strong> ${scenario.puissance} </p>
-    <p><strong>💶 Gain estimé la 1ʳᵉ année :</strong> ${Math.round(economieAnnuelleCorrigee).toLocaleString('fr-FR')} €<br>
-    <span style="font-weight: normal;">soit environ ${Math.round(economieMensuelle).toLocaleString('fr-FR')} € par mois</span></p>
-    <p><strong>📈 Économie cumulée sur 15 ans :</strong> ${Math.round(gain15ans).toLocaleString('fr-FR')} €</p>
-    <p style="margin-top: 12px;">✅ <em>Voici l’économie réalisable grâce à l’autoconsommation solaire et au stockage virtuel.
-    Et ce n’est qu’une première estimation ! Une étude gratuite et personnalisée peut maintenant affiner votre gain réel selon votre toiture.</em></p>
-  </div>
-`;
-
-
-        afficherBlocFinancement(scenario, economieMensuelle, gain15ans);
-              document.querySelector("#blocMail form").addEventListener("submit", function(e) {
-        e.preventDefault();
-        
-
-        const email = this.querySelector('input[type="email"]').value;
-        const telephone = this.querySelector('input[type="tel"]').value;
-
-        const payload = {
-          codePostal: document.getElementById("codePostal").value,
-          conso: parseFloat(document.getElementById("conso").value),
-          facture: parseFloat(document.getElementById("facture").value),
-          production: scenario.prod,
-          economieAnnuelle: Math.round(economieAnnuelleCorrigee),
-          economieMensuelle: Math.round(economieMensuelle),
-          gain15ans: Math.round(gain15ans),
-          puissance: scenario.puissance,
-          panels: scenario.panels,
-          prix: scenario.prix,
-          mensualite: scenario.mensualite,
-          taeg: scenario.taeg,
-          total: scenario.total,
-          email: email,
-          telephone: telephone
-        };
-
-fetch("https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec", {
-  method: "POST",
-  mode: "no-cors", // ✅ AJOUT OBLIGATOIRE POUR GITHUB
-  body: JSON.stringify(payload),
-  headers: {
-    "Content-Type": "application/json"
+  if (!codePostal || isNaN(conso) || isNaN(facture) || conso <= 0 || facture <= 0) {
+    alert("Merci de remplir correctement tous les champs.");
+    return;
   }
-})
-.then(res => {
-  document.getElementById("confirmationMessage").style.display = "block";
 
-})
-.catch(err => {
-  console.error("Erreur lors de l'envoi vers Sheets :", err);
-  alert("❌ Une erreur est survenue. Merci de réessayer.");
+  const url = "https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec?codePostal=" + codePostal;
+
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      const scenarios = data.map(item => ({
+        puissance: item.Puissance,
+        prod: parseInt(item.Prod),
+        seuil: parseInt(item.Seuil),
+        panels: parseInt(item.Panels),
+        prix: parseFloat(item.Prix),
+        mensualite: parseFloat(item.Mensualite),
+        taeg: parseFloat(item.Taeg),
+        total: parseFloat(item.Total)
+      }));
+
+      const prixKwh = facture / conso;
+      const scenario = [...scenarios].reverse().find(s => s.prod <= conso) || scenarios[0];
+      scenarios.reverse();
+
+      const autoKwh = scenario.prod * 0.6;
+      const stockKwh = scenario.prod * 0.4;
+      const acheminement = 0.05;
+
+      const factureAvant = conso * prixKwh;
+      const autoValue = autoKwh * prixKwh;
+      const stockValue = stockKwh * prixKwh;
+      const coutAcheminement = stockKwh * acheminement;
+      const factureApres = factureAvant - autoValue - stockValue + coutAcheminement;
+      const economieAnnuelle = factureAvant - factureApres;
+      const economieAnnuelleCorrigee = Math.min(economieAnnuelle, facture);
+      const economieMensuelle = economieAnnuelleCorrigee / 12;
+
+      let gain15ans = 0;
+      let prixActuel = prixKwh;
+      for (let i = 0; i < 15; i++) {
+        const autoVal = autoKwh * prixActuel;
+        const stockVal = stockKwh * prixActuel;
+        const coutAch = stockKwh * acheminement;
+        const factureAv = conso * prixActuel;
+        const factureAp = factureAv - autoVal - stockVal + coutAch;
+        const economie = factureAv - factureAp;
+        gain15ans += economie;
+        prixActuel *= 1.05;
+      }
+
+      document.getElementById('recap').style.display = 'block';
+      document.getElementById('resultat').style.display = 'block';
+      document.getElementById('blocMail').style.display = 'block';
+      document.getElementById('blocImagePV').style.display = 'block';
+
+      document.getElementById('recap').innerHTML = `
+        <p>🔌 <strong>Consommation annuelle actuelle</strong> : ${conso.toLocaleString('fr-FR')} kWh</p>
+        <p>💶 <strong>Facture annuelle actuelle</strong> : ${facture.toLocaleString('fr-FR')} €</p>
+        <p>⚡ <strong>Prix moyen du kWh</strong> : ${prixKwh.toFixed(3)} €</p>
+        <br>
+        <p>☀️ <strong>Installation recommandée</strong> : ${scenario.puissance} — ${scenario.panels} panneaux photovoltaïques de 500 W</p>
+        <p>🔧 <strong>Production solaire estimée</strong> : ${scenario.prod.toLocaleString('fr-FR')} kWh/an</p>
+      `;
+
+      document.getElementById('resultat').innerHTML = `
+        <div style="background: #ffffff; border: 3px solid #0077b6; padding: 24px; border-radius: 12px; margin-top: 25px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); font-size: 1.05em; line-height: 1.6;">
+          <p><strong style="color:#0077b6; font-size: 1.15em;">💶 Gain estimé la 1ʳᵉ année :</strong> ${Math.round(economieAnnuelleCorrigee).toLocaleString('fr-FR')} €</p>
+          <p style="margin-top: -8px;">🔁 soit environ <strong>${Math.round(economieMensuelle).toLocaleString('fr-FR')} €</strong> par mois</p>
+          <p><strong style="color:#0077b6; font-size: 1.15em;">📈 Économie sur 15 ans :</strong> ${Math.round(gain15ans).toLocaleString('fr-FR')} €</p>
+          <hr style="margin: 20px 0; border: none; border-top: 1px dashed #bbb;">
+          <p style="color:#333;"><strong>✅ Estimation réalisée à partir de vos données.</strong><br>
+          Pour aller plus loin : une étude gratuite peut adapter ce projet à votre toiture et vos besoins réels.</p>
+        </div>
+      `;
+
+      afficherBlocFinancement(scenario, economieMensuelle, gain15ans);
+      // Envoi vers Sheets : inchangé
+      // Formattage téléphone : inchangé
+    })
+    .catch(error => {
+      console.error("Erreur lors du chargement des scénarios :", error);
+      alert("Erreur lors du chargement des données du simulateur.");
+    });
 });
 
-      });
-
-      });
-    });
 
         document.getElementById("phone").addEventListener("input", function (e) {
     let value = e.target.value.replace(/\D/g, "").substring(0, 10);

@@ -30,7 +30,6 @@
       margin: 0 auto 20px auto;
       box-sizing: border-box;
     }
-
     .recap,
     .result,
     #emailBloc {
@@ -43,14 +42,12 @@
       box-shadow: none;
       border: none;
     }
-
     .form-section h2,
     #emailBloc h2 {
       font-size: 18px;
       color: #123;
       margin-bottom: 20px;
     }
-
     .form-section input,
     .form-section button,
     #emailBloc input,
@@ -63,7 +60,6 @@
       font-size: 16px;
       box-sizing: border-box;
     }
-
     .form-section button,
     #emailBloc button {
       background: #0069d9;
@@ -71,18 +67,15 @@
       font-weight: bold;
       cursor: pointer;
     }
-
     .form-section button:hover,
     #emailBloc button:hover {
       background: #0053ba;
     }
-
     .finance-details {
       font-size: 14px;
       color: #555;
       margin-top: 15px;
     }
-
     .spinner {
       width: 40px;
       height: 40px;
@@ -92,12 +85,10 @@
       animation: spin 1s linear infinite;
       margin: 10px auto;
     }
-
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-
     @media (max-width: 480px) {
       h1 {
         font-size: 20px;
@@ -132,20 +123,15 @@
   <div id="recap" class="recap"></div>
   <div id="resultat" class="result"></div>
 
-  
-
-
   <div id="emailBloc">
     <h2>📧 Recevez cette estimation complète par email</h2>
     <p style="text-align:left; font-size: 15px; line-height: 1.6; color: #333;">
       Et si vous souhaitez un échange pour affiner le projet selon <strong>votre toiture, vos besoins</strong> ou <strong>vos contraintes</strong>, vous pouvez aussi laisser votre numéro (facultatif).<br><br>
       <strong>➕ C’est rapide, sans engagement.</strong>
     </p>
-
     <input type="email" id="emailUser" placeholder="Votre adresse email">
     <input type="tel" id="telUser" placeholder="Votre numéro (pour être rappelé si vous le souhaitez)">
     <button onclick="envoyerEstimation()">📩 Recevoir mon estimation</button>
-
     <p style="margin-top: 20px; font-size: 14px; line-height: 1.4; text-align: center;">
       ⭐⭐⭐⭐⭐ <strong>4,9/5 sur Google</strong> – Plus de 400 foyers accompagnés en France.<br>
       🔒 Vos données ne seront jamais revendues. Aucun démarchage automatique.
@@ -153,190 +139,187 @@
   </div>
 
   <script>
-    
+    let scenarios = [];
 
- let scenarios = [];
-  let selectedScenario = null;
+    function fetchScenarios(departement) {
+      return fetch('https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec')
+        .then(response => response.json())
+        .then(data => data.filter(row => row.Departement == departement).map(row => ({
+          puissance: row.Puissance,
+          prod: parseFloat(row.Prod),
+          seuil: parseFloat(row.Seuil),
+          panels: parseInt(row.Panels),
+          prix: parseFloat(row.Prix),
+          mensualite: parseFloat(row.Mensualite),
+          taeg: parseFloat(row.Taeg),
+          total: parseFloat(row.Total)
+        })))
+        .catch(error => {
+          console.error("Erreur lors du chargement des données :", error);
+          alert("Impossible de charger les données, réessayez plus tard.");
+          return [];
+        });
+    }
 
-  function fetchScenarios(departement) {
-    return fetch('https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec')
-      .then(response => response.json())
-      .then(data => data.filter(row => row.Departement == departement).map(row => ({
-        puissance: row.Puissance,
-        prod: parseFloat(row.Prod),
-        seuil: parseFloat(row.Seuil),
-        panels: parseInt(row.Panels),
-        prix: parseFloat(row.Prix),
-        mensualite: parseFloat(row.Mensualite),
-        taeg: parseFloat(row.Taeg),
-        total: parseFloat(row.Total)
-      })))
-      .catch(error => {
-        console.error("Erreur lors du chargement des données :", error);
-        alert("Impossible de charger les données, réessayez plus tard.");
-        return [];
+    async function calculerSimulation() {
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('recap').style.display = 'none';
+      document.getElementById('resultat').style.display = 'none';
+      document.getElementById('emailBloc').style.display = 'none';
+
+      const codePostal = document.getElementById('codePostal').value.trim();
+      const conso = parseFloat(document.getElementById('conso').value);
+      const facture = parseFloat(document.getElementById('facture').value);
+
+      if (!/^[0-9]{5}$/.test(codePostal)) {
+        alert("Veuillez entrer un code postal valide.");
+        return;
+      }
+      if (isNaN(conso) || isNaN(facture) || conso <= 0 || facture <= 0) {
+        alert("Merci de remplir correctement tous les champs.");
+        return;
+      }
+
+      const departement = codePostal.substring(0, 2);
+      scenarios = await fetchScenarios(departement);
+      if (scenarios.length === 0) {
+        alert("Aucune donnée disponible pour ce département.");
+        return;
+      }
+
+      document.getElementById('loading').style.display = 'none';
+
+      const prixKwh = facture / conso;
+      const scenario = [...scenarios].reverse().find(s => s.prod * 1.05 <= conso) || scenarios[0];
+      window.selectedScenario = scenario; // 🔧 Sauvegarde du bon scénario
+      scenarios.reverse();
+
+      const autoKwh = scenario.prod * 0.6;
+      const stockKwh = scenario.prod * 0.4;
+      const acheminement = 0.05;
+
+      const factureAvant = conso * prixKwh;
+      const autoValue = autoKwh * prixKwh;
+      const stockValue = stockKwh * prixKwh;
+      const coutAcheminement = stockKwh * acheminement;
+      const factureApres = factureAvant - autoValue - stockValue + coutAcheminement;
+      const economieAnnuelle = factureAvant - factureApres;
+      const economieMensuelle = economieAnnuelle / 12;
+
+      let gain15ans = 0;
+      let prixActuel = prixKwh;
+      for (let i = 0; i < 15; i++) {
+        const autoVal = autoKwh * prixActuel;
+        const stockVal = stockKwh * prixActuel;
+        const coutAch = stockKwh * acheminement;
+        const factureAv = conso * prixActuel;
+        const factureAp = factureAv - autoVal - stockVal + coutAch;
+        const economie = factureAv - factureAp;
+        gain15ans += economie;
+        prixActuel *= 1.05;
+      }
+
+      document.getElementById('recap').innerHTML = `
+        Code postal : ${codePostal}<br>
+        Consommation annuelle : ${conso.toLocaleString('fr-FR')} kWh<br>
+        Prix du kWh : ${prixKwh.toFixed(3)} €<br>
+        Facture annuelle : ${facture.toLocaleString('fr-FR')} €<br>
+        Puissance installée : ${scenario.puissance} soit ${scenario.panels} panneaux photovoltaïques de 500 W<br>
+        Production annuelle : ${scenario.prod.toLocaleString('fr-FR')} kWh<br>
+        <strong>Cela représente ${(scenario.prod / conso * 100).toFixed(2)}% de votre consommation annuelle.</strong>
+      `;
+      document.getElementById('recap').style = "display:block;visibility:visible;height:auto;padding:20px;margin:0 auto 20px auto;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e0e0;";
+      
+      document.getElementById('resultat').innerHTML = `
+        <div class="item"><strong>Gain estimé la 1ère année :</strong> ${economieAnnuelle.toFixed(0)} €</div>
+        <div class="item"><strong>Gain par mois :</strong> ${economieMensuelle.toFixed(0)} €</div>
+        <div class="item"><strong>Économie cumulée sur 15 ans :</strong> ${gain15ans.toFixed(0)} €</div>
+        <hr>
+        <div class="item">
+          <strong>🔄 Ce que nous vous proposons</strong><br>
+          🗖 Et si vous remplaciez votre facture d’électricité par un investissement utile ?<br><br>
+          💡 Chaque mois, au lieu de payer votre fournisseur, vous autofinancez votre propre installation solaire.<br><br>
+          ⚡ Une mensualité fixe de <strong>${scenario.mensualite.toFixed(2)} €</strong>* pour financer cette installation clé en main — et ainsi devenir propriétaire de votre production solaire.<br><br>
+          ✅ Ce n’est pas une dépense en plus, c’est à la place de ce que vous payez déjà.<br><br>
+          🎯 Résultat ? Vous devenez propriétaire de votre production d’électricité, tout en disant stop aux hausses de tarifs.
+        </div>
+        <div class="finance-details">
+          * Exemple : installation ${scenario.puissance} à ${scenario.prix.toLocaleString('fr-FR')} €<br>
+          financement sur 180 mois au TAEG fixe de ${scenario.taeg.toFixed(2)} %, mensualité ${scenario.mensualite.toFixed(2)} € (hors assurance).<br>
+          Coût total du financement hors assurance : ${scenario.total.toLocaleString('fr-FR')} €.<br>
+          Financement proposé par notre partenaire Projexio, sous réserve d’acceptation. Un crédit vous engage et doit être remboursé.<br>
+          Vérifiez vos capacités de remboursement avant de vous engager.
+        </div>
+      `;
+      document.getElementById('resultat').style = "display:block;visibility:visible;height:auto;padding:20px;margin:0 auto 20px auto;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e0e0;";
+      document.getElementById('emailBloc').style = "display:block;visibility:visible;height:auto;padding:20px;margin:0 auto 20px auto;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e0e0;";
+    }
+
+    function envoyerEstimation() {
+      const codePostal = document.getElementById('codePostal').value.trim();
+      const conso = parseFloat(document.getElementById('conso').value);
+      const facture = parseFloat(document.getElementById('facture').value);
+      const email = document.getElementById('emailUser').value.trim();
+      const tel = document.getElementById('telUser').value.trim();
+
+      if (!email) {
+        alert("Merci de renseigner votre adresse email pour recevoir votre estimation.");
+        return;
+      }
+
+      const scenario = window.selectedScenario; // ✅ scénario utilisé à l’écran
+
+      const prixKwh = facture / conso;
+      const autoKwh = scenario.prod * 0.6;
+      const stockKwh = scenario.prod * 0.4;
+      const acheminement = 0.05;
+
+      const factureAvant = conso * prixKwh;
+      const autoValue = autoKwh * prixKwh;
+      const stockValue = stockKwh * prixKwh;
+      const coutAcheminement = stockKwh * acheminement;
+      const factureApres = factureAvant - autoValue - stockValue + coutAcheminement;
+      const economieAnnuelle = factureAvant - factureApres;
+      const economieMensuelle = economieAnnuelle / 12;
+
+      let gain15ans = 0;
+      let prixActuel = prixKwh;
+      for (let i = 0; i < 15; i++) {
+        const autoVal = autoKwh * prixActuel;
+        const stockVal = stockKwh * prixActuel;
+        const coutAch = stockKwh * acheminement;
+        const factureAv = conso * prixActuel;
+        const factureAp = factureAv - autoVal - stockVal + coutAch;
+        const economie = factureAv - factureAp;
+        gain15ans += economie;
+        prixActuel *= 1.05;
+      }
+
+      const formData = new FormData();
+      formData.append("code_postal", codePostal);
+      formData.append("conso", conso);
+      formData.append("facture", facture);
+      formData.append("prod", scenario.prod);
+      formData.append("eco1", economieAnnuelle.toFixed(0));
+      formData.append("ecomensuelle", economieMensuelle.toFixed(0));
+      formData.append("eco15", gain15ans.toFixed(0));
+      formData.append("puissance", scenario.puissance);
+      formData.append("panneaux", scenario.panels);
+      formData.append("prix", scenario.prix);
+      formData.append("mensualite", scenario.mensualite);
+      formData.append("taeg", scenario.taeg);
+      formData.append("totalcredit", scenario.total);
+      formData.append("email", email);
+      formData.append("tel", tel);
+
+      fetch('https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData
       });
-  }
 
-  async function calculerSimulation() {
-    document.getElementById('loading').style.display = 'block';
-    document.getElementById('recap').style.display = 'none';
-    document.getElementById('resultat').style.display = 'none';
-    document.getElementById('emailBloc').style.display = 'none';
-
-    const codePostal = document.getElementById('codePostal').value.trim();
-    const conso = parseFloat(document.getElementById('conso').value);
-    const facture = parseFloat(document.getElementById('facture').value);
-
-    if (!/^[0-9]{5}$/.test(codePostal)) {
-      alert("Veuillez entrer un code postal valide.");
-      return;
+      alert("✅ Estimation bien envoyée ! Merci.");
     }
-    if (isNaN(conso) || isNaN(facture) || conso <= 0 || facture <= 0) {
-      alert("Merci de remplir correctement tous les champs.");
-      return;
-    }
-
-    const departement = codePostal.substring(0, 2);
-    scenarios = await fetchScenarios(departement);
-
-    if (scenarios.length === 0) {
-      alert("Aucune donnée disponible pour ce département.");
-      return;
-    }
-
-    document.getElementById('loading').style.display = 'none';
-
-    const prixKwh = facture / conso;
-    selectedScenario = [...scenarios].reverse().find(s => s.prod * 1.05 <= conso) || scenarios[0];
-    scenarios.reverse();
-
-    const autoKwh = selectedScenario.prod * 0.6;
-    const stockKwh = selectedScenario.prod * 0.4;
-    const acheminement = 0.05;
-
-    const factureAvant = conso * prixKwh;
-    const autoValue = autoKwh * prixKwh;
-    const stockValue = stockKwh * prixKwh;
-    const coutAcheminement = stockKwh * acheminement;
-    const factureApres = factureAvant - autoValue - stockValue + coutAcheminement;
-    const economieAnnuelle = factureAvant - factureApres;
-    const economieMensuelle = economieAnnuelle / 12;
-
-    let gain15ans = 0;
-    let prixActuel = prixKwh;
-    for (let i = 0; i < 15; i++) {
-      const autoVal = autoKwh * prixActuel;
-      const stockVal = stockKwh * prixActuel;
-      const coutAch = stockKwh * acheminement;
-      const factureAv = conso * prixActuel;
-      const factureAp = factureAv - autoVal - stockVal + coutAch;
-      gain15ans += factureAv - factureAp;
-      prixActuel *= 1.05;
-    }
-
-    // Affichage résultats
-    document.getElementById('recap').innerHTML = `
-      Code postal : ${codePostal}<br>
-      Consommation annuelle : ${conso.toLocaleString('fr-FR')} kWh<br>
-      Prix du kWh : ${prixKwh.toFixed(3)} €<br>
-      Facture annuelle : ${facture.toLocaleString('fr-FR')} €<br>
-      Puissance installée : ${selectedScenario.puissance} soit ${selectedScenario.panels} panneaux photovoltaïques de 500 W<br>
-      Production annuelle : ${selectedScenario.prod.toLocaleString('fr-FR')} kWh<br>
-      <strong>Cela représente ${(selectedScenario.prod / conso * 100).toFixed(2)}% de votre consommation annuelle.</strong>
-    `;
-    document.getElementById('recap').style.display = 'block';
-
-    document.getElementById('resultat').innerHTML = `
-      <div class="item"><strong>Gain estimé la 1ère année :</strong> ${economieAnnuelle.toFixed(0)} €</div>
-      <div class="item"><strong>Gain par mois :</strong> ${economieMensuelle.toFixed(0)} €</div>
-      <div class="item"><strong>Économie cumulée sur 15 ans :</strong> ${gain15ans.toFixed(0)} €</div>
-      <hr>
-      <div class="item">
-        <strong>🔄 Ce que nous vous proposons</strong><br>
-        🗖 Et si vous remplaciez votre facture d’électricité par un investissement utile ?<br><br>
-        💡 Chaque mois, au lieu de payer votre fournisseur, vous autofinancez votre propre installation solaire.<br><br>
-        ⚡ Une mensualité fixe de <strong>${selectedScenario.mensualite.toFixed(2)} €</strong>* pour financer cette installation clé en main.<br><br>
-        ✅ Ce n’est pas une dépense en plus, c’est à la place de ce que vous payez déjà.<br><br>
-        🎯 Résultat ? Vous devenez propriétaire de votre production d’électricité, tout en disant stop aux hausses de tarifs.
-      </div>
-      <div class="finance-details">
-        * Exemple : installation ${selectedScenario.puissance} à ${selectedScenario.prix.toLocaleString('fr-FR')} €<br>
-        financement sur 180 mois au TAEG fixe de ${selectedScenario.taeg.toFixed(2)} %, mensualité ${selectedScenario.mensualite.toFixed(2)} € (hors assurance).<br>
-        Coût total du financement hors assurance : ${selectedScenario.total.toLocaleString('fr-FR')} €.<br>
-        Financement proposé par notre partenaire Projexio, sous réserve d’acceptation. Un crédit vous engage et doit être remboursé.<br>
-        Vérifiez vos capacités de remboursement avant de vous engager.
-      </div>
-    `;
-    document.getElementById('resultat').style.display = 'block';
-    document.getElementById('emailBloc').style.display = 'block';
-  }
-
-  function envoyerEstimation() {
-    const codePostal = document.getElementById('codePostal').value.trim();
-    const conso = parseFloat(document.getElementById('conso').value);
-    const facture = parseFloat(document.getElementById('facture').value);
-    const email = document.getElementById('emailUser').value.trim();
-    const tel = document.getElementById('telUser').value.trim();
-
-    if (!email) {
-      alert("Merci de renseigner votre adresse email pour recevoir votre estimation.");
-      return;
-    }
-
-    if (!selectedScenario) {
-      alert("Scénario non défini. Veuillez d'abord lancer une simulation.");
-      return;
-    }
-
-    const prixKwh = facture / conso;
-    const autoKwh = selectedScenario.prod * 0.6;
-    const stockKwh = selectedScenario.prod * 0.4;
-    const acheminement = 0.05;
-
-    const factureAvant = conso * prixKwh;
-    const autoValue = autoKwh * prixKwh;
-    const stockValue = stockKwh * prixKwh;
-    const coutAcheminement = stockKwh * acheminement;
-    const factureApres = factureAvant - autoValue - stockValue + coutAcheminement;
-    const economieAnnuelle = factureAvant - factureApres;
-    const economieMensuelle = economieAnnuelle / 12;
-
-    let gain15ans = 0;
-    let prixActuel = prixKwh;
-    for (let i = 0; i < 15; i++) {
-      const autoVal = autoKwh * prixActuel;
-      const stockVal = stockKwh * prixActuel;
-      const coutAch = stockKwh * acheminement;
-      const factureAv = conso * prixActuel;
-      const factureAp = factureAv - autoVal - stockVal + coutAch;
-      gain15ans += factureAv - factureAp;
-      prixActuel *= 1.05;
-    }
-
-    const formData = new FormData();
-    formData.append("code_postal", codePostal);
-    formData.append("conso", conso);
-    formData.append("facture", facture);
-    formData.append("prod", selectedScenario.prod);
-    formData.append("eco1", economieAnnuelle.toFixed(0));
-    formData.append("ecomensuelle", economieMensuelle.toFixed(0));
-    formData.append("eco15", gain15ans.toFixed(0));
-    formData.append("puissance", selectedScenario.puissance);
-    formData.append("panneaux", selectedScenario.panels);
-    formData.append("prix", selectedScenario.prix);
-    formData.append("mensualite", selectedScenario.mensualite);
-    formData.append("taeg", selectedScenario.taeg);
-    formData.append("totalcredit", selectedScenario.total);
-    formData.append("email", email);
-    formData.append("tel", tel);
-
-    fetch('https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec', {
-      method: 'POST',
-      mode: 'no-cors',
-      body: formData
-    });
-
-    alert("✅ Estimation bien envoyée ! Merci.");
-  }
-</script>
+  </script>
+</body>
+</html>

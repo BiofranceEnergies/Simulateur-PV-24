@@ -292,7 +292,7 @@
       emailBloc.style.border = '1px solid #e0e0e0';
     }
 
-  function envoyerEstimation() {
+function envoyerEstimation() {
   const codePostal = document.getElementById('codePostal').value.trim();
   const conso = parseFloat(document.getElementById('conso').value);
   const facture = parseFloat(document.getElementById('facture').value);
@@ -331,27 +331,28 @@
     prixActuel *= 1.05;
   }
 
-  const formData = new FormData();
-  formData.append("code_postal", codePostal);
-  formData.append("conso", conso);
-  formData.append("facture", facture);
-  formData.append("prod", scenario.prod);
-  formData.append("eco1", economieAnnuelle.toFixed(0));
-  formData.append("ecomensuelle", economieMensuelle.toFixed(0));
-  formData.append("eco15", gain15ans.toFixed(0));
-  formData.append("puissance", scenario.puissance);
-  formData.append("panneaux", scenario.panels);
-  formData.append("prix", scenario.prix);
-  formData.append("mensualite", scenario.mensualite);
-  formData.append("taeg", scenario.taeg);
-  formData.append("totalcredit", scenario.total);
-  formData.append("email", email);
-  formData.append("tel", tel);
+  const payload = {
+    code_postal: codePostal,
+    conso: conso,
+    facture: facture,
+    prod: scenario.prod,
+    eco1: economieAnnuelle.toFixed(0),
+    ecomensuelle: economieMensuelle.toFixed(0),
+    eco15: gain15ans.toFixed(0),
+    puissance: scenario.puissance,
+    panneaux: scenario.panels,
+    prix: scenario.prix,
+    mensualite: scenario.mensualite,
+    taeg: scenario.taeg,
+    totalcredit: scenario.total,
+    email: email,
+    tel: tel
+  };
 
   fetch('https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec', {
     method: 'POST',
-    mode: 'no-cors',
-    body: formData
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
   })
   .then(response => response.text())
   .then(result => {
@@ -365,7 +366,8 @@
     console.error("Erreur d'envoi :", error);
     alert("Erreur d’envoi. Veuillez réessayer.");
   });
-} 
+}
+
   </script>
 </body>
 </html>

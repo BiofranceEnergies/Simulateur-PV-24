@@ -3,425 +3,209 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulation Photovoltaïque</title>
+  <title>Simulation Photovoltaïque Simplifiée</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #dbe0e6;
       padding: 20px;
-      max-width: 700px;
+      background: #f0f4f8;
       margin: auto;
-      color: #2c2c2c;
     }
-
     h1 {
+      color: #2b7a0b;
       text-align: center;
-      color: #333;
-      font-size: 26px;
-      margin-bottom: 15px;
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
+    .form-section,
+    .recap,
+    .result,
+    #emailBloc {
+      width: 100%;
+      max-width: 600px;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin: 0 auto 20px auto;
+      box-sizing: border-box;
     }
 
-   .intro {
-  background: #ffffff;
-  padding: 18px 22px;
-  border: 2px solid #ffcc00;
-  color: #222222;
-  font-size: 17px;
-  line-height: 1.6;
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-
-    .intro strong {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 5px;
+    .recap,
+    .result,
+    #emailBloc {
+      display: none;
+      visibility: hidden;
+      height: 0;
+      overflow: hidden;
+      padding: 0;
+      margin: 0 auto;
+      box-shadow: none;
+      border: none;
     }
 
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-      @keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-
-#compteur {
-  animation: fadeInUp 0.8s ease-out, pulse 2.5s infinite;
-
-}
-
-      
-   .form-section {
-  background: #ffffff;
-  padding: 25px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  color: #222;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  margin-bottom: 20px;
-}
-
-
-   label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 600;
-  color: #333333;
-  font-size: 0.95em;
-}
-
-
-input {
-  width: 100%;
-  padding: 12px;
-  background: #444;          /* fond sombre */
-  border: none;
-  border-radius: 6px;
-  color: #fff;               /* texte blanc */
-  margin-bottom: 15px;
-  font-size: 1em;
-  box-sizing: border-box;
-}
-
-input::placeholder {
-  color: #dddddd;            /* gris clair pour le placeholder */
-  opacity: 1;
-}
-
-
-
-    button {
-  width: 100%;
-  padding: 14px;
-  background: #0056d6;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
-  font-size: 1em;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-
-    button:active {
-      transform: scale(0.98);
-    }
-
-    .recap {
-      background: #f5f5f5;
-      border-radius: 5px;
-      padding: 18px;
+    .form-section h2,
+    #emailBloc h2 {
+      font-size: 18px;
+      color: #123;
       margin-bottom: 20px;
-      color: #333;
-      min-height: 160px;
     }
 
-    .result {
-      background: #f5f5f5;
-      border-radius: 5px;
-      padding: 18px;
-      color: #1c4424;
-      min-height: 260px;
+    .form-section input,
+    .form-section button,
+    #emailBloc input,
+    #emailBloc button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 2px solid #007bff;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
     }
 
-    .result p {
-      margin-bottom: 10px;
+    .form-section button,
+    #emailBloc button {
+      background: #0069d9;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
     }
 
-    .result p:last-child {
-      font-style: italic;
-      font-size: 0.95rem;
+    .form-section button:hover,
+    #emailBloc button:hover {
+      background: #0053ba;
+    }
+
+    .finance-details {
+      font-size: 14px;
+      color: #555;
       margin-top: 15px;
     }
 
-    @media (max-width: 500px) {
-      body {
-        padding: 10px;
-      }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #b3d4fc;
+      border-top: 4px solid #007bff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 10px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 480px) {
       h1 {
-        font-size: 22px;
+        font-size: 20px;
+        line-height: 1.4;
       }
-      .intro {
-        font-size: 15px;
+      .form-section h2,
+      #emailBloc h2 {
+        font-size: 16px;
       }
-    }
-        @media (max-width: 600px) {
-      #blocImagePV > div {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
-
-      #blocImagePV img {
-        max-width: 100%;
-      }
-
-      #blocImagePV ul {
-        text-align: left;
+      .finance-details {
+        font-size: 13px;
       }
     }
-
   </style>
 </head>
 <body>
-  <!-- Bloc logo centré -->
-  <div style="text-align: center; margin-bottom: 20px;">
-    <img src="https://github.com/BiofranceEnergies/biofrance-images/blob/d21e60bacd91a0bbb74a626f515f7b6246bb6c28/Logo%20biofrance%20energie%20-webp.webp?raw=true" 
-         alt="Logo Biofrance Énergies" 
-         style="max-width: 240px; height: auto;">
-  </div>
   <h1>En 3 secondes, découvrez votre économie et le chiffrage de votre projet solaire.</h1>
 
-<div id="compteur" style="
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  font-size: 1.1em;
-  font-weight: 600;
-  color: #1d3557;
-  background: linear-gradient(to right, #e0f4ff, #f4faff);
-  padding: 12px 20px;
-  border-radius: 12px;
-  margin: 25px auto;
-  max-width: 480px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-  border: 1px solid #cce3f2;
-  transition: transform 0.3s ease;
-">
-  ⏱️ <span style="color:#2b2b2b;">Simulations effectuées depuis le 1er mai :</span>
-  <span id="compteurValeur" style="font-size: 1.3em; font-weight: bold; color: #0077b6;">...</span>
-</div>
-
-
-  
-
-<div class="intro">
-    <p><strong>⚡ Un simulateur unique, pensé pour vous donner des réponses, pas pour collecter vos coordonnées.</strong></p>
-    <p>📍 Code postal, ⚡ consommation, 💶 facture… en 3 secondes, une estimation chiffrée de votre projet solaire s’affiche directement à l’écran.</p>
-    <p>❌ Aucun formulaire à remplir. 📞 Aucun conseiller à attendre.</p>
-    <p>💡 Une estimation intelligente, basée sur une IA nourrie de données réelles et de notre expérience terrain.</p>
-    <p><strong>ℹ️ Chez Biofrance Énergies, vous avez droit à une estimation claire, fiable et immédiate avant de vous engager.</strong></p>
-
-  </div>
-
-
-
   <div class="form-section">
-    <label for="codePostal">📍 Votre code postal</label>
-    <input type="text" id="codePostal" placeholder="Ex : 75001">
-      
-    <label for="conso">🔌 Consommation annuelle (kWh)</label>
-    <input type="number" id="conso" placeholder="Ex : 7200">
-
-    <label for="facture">💶 Facture annuelle (€)</label>
-    <input type="number" id="facture" placeholder="Ex : 1680">
-
-    <button id="simuler">📊 Lancer la simulation</button>
+    <h2>Vos données de consommation</h2>
+    <input type="text" id="codePostal" placeholder="Votre code postal" maxlength="5">
+    <input type="number" id="conso" placeholder="Votre conso (kWh)">
+    <input type="number" id="facture" placeholder="Votre facture (€)">
+    <button onclick="calculerSimulation()">🔍 Lancer la simulation</button>
   </div>
 
-  <div id="recap" class="recap" style="display: none;">
-
-    <p><em>Les résultats apparaîtront ici après votre simulation.</em></p>
-  </div>
-<div id="blocImagePV" style="display: none; background: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); margin-bottom: 20px;">
-  <div style="display: flex; align-items: flex-start; gap: 20px;">
-    <img src="https://github.com/BiofranceEnergies/biofrance-images/blob/ed9f69eca63582630e403b6f239e7190254bce90/pano%20500w.webp?raw=true" alt="Panneaux photovoltaïques 500W" style="max-width: 200px; height: auto; border-radius: 6px;">
-    
-    <div style="font-size: 0.95em; color: #333;">
-      <h3 style="margin: 0 0 10px 0; font-size: 1.1em; color: #0056d6;">FLASH 500 Half-Cut Glass-Glass Topcon</h3>
-      <ul style="margin: 0; padding-left: 18px;">
-        <li><strong>Panneau compact :</strong> 1950 mm x 1134 mm x 30 mm, 27,1 Kg, 2,2 m²</li>
-        <li>Panneau bi-verre et bi-facial</li>
-        <li>Gain de puissance de 10 % potentiel grâce à la bifacialité</li>
-        <li>Garantie 30 ans</li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-
-  <div id="resultat" class="result" style="display: none;">
-
-    <p><em>Veuillez entrer votre consommation et votre facture pour voir le gain estimé.</em></p>
+  <div id="loading" style="display: none; text-align: center; margin-top: 20px;">
+    <div class="spinner"></div>
+    <p style="font-size: 14px; color: #555;">Veuillez patienter... Calcul en cours</p>
   </div>
 
+  <div id="recap" class="recap"></div>
+  <div id="resultat" class="result"></div>
 
-  <div id="offre" style="margin-top: 20px; display: none;">
-    <div style="background: #f5f5f5; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
-  <strong style="color: #0056d6; font-size: 1.1em; display: block; margin-bottom: 8px;">📅 Dès la première année</strong>
-  <p style="margin: 0; font-size: 16px;">
-    Vous réalisez une économie d’environ 
-    <strong style="font-size: 1.1em;">💶 <span id="ecoMensuelle"></span></strong> 
-    par mois, grâce à l’autoconsommation et à la valorisation de votre surplus.
-  </p>
-</div>
-
-<div style="background: #f5f5f5; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
-  <strong style="color: #0056d6; font-size: 1.1em; display: block; margin-bottom: 8px;">🔄 Ce que nous vous proposons</strong>
   
-  <p style="margin-bottom: 10px;">📆 Et si vous remplaciez votre facture d’électricité par un investissement utile ?</p>
-  <p style="margin-bottom: 10px;">💡 Chaque mois, au lieu de payer votre fournisseur, vous autofinancez votre propre installation solaire.</p>
-  
-  <p style="margin-bottom: 10px;">⚡ <span id="mensualiteTexte"></span></p>
-  
-  <p style="margin-bottom: 10px;">✅ <strong>Ce n’est pas une dépense en plus, c’est à la place de ce que vous payez déjà.</strong></p>
-  
-  <p style="margin-bottom: 0;">🎯 Résultat ? Vous devenez <strong>propriétaire de votre production d’électricité</strong>, tout en disant stop aux hausses de tarifs.</p>
-</div>
 
 
+  <div id="emailBloc">
+    <h2>📧 Recevez cette estimation complète par email</h2>
+    <p style="text-align:left; font-size: 15px; line-height: 1.6; color: #333;">
+      Et si vous souhaitez un échange pour affiner le projet selon <strong>votre toiture, vos besoins</strong> ou <strong>vos contraintes</strong>, vous pouvez aussi laisser votre numéro (facultatif).<br><br>
+      <strong>➕ C’est rapide, sans engagement.</strong>
+    </p>
 
-    <div style="background: #f5f5f5; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
-  <strong style="color: #0056d6; font-size: 1.1em; display: block; margin-bottom: 8px;">📈 Vos gains dans le temps</strong>
-  <p style="margin-bottom: 10px;">📊 Sur 15 ans, vous économisez déjà <strong id="eco15Texte"></strong>.</p>
-  <p style="margin-bottom: 10px;">🔄 Et après ? Vos panneaux continuent à produire gratuitement pendant encore des années.</p>
-  <p style="margin-bottom: 0;">💰 Une fois le financement remboursé, 100 % de votre production devient un gain net.
-</p>
-</div>
+    <input type="email" id="emailUser" placeholder="Votre adresse email">
+    <input type="tel" id="telUser" placeholder="Votre numéro (pour être rappelé si vous le souhaitez)">
+    <button onclick="envoyerEstimation()">📩 Recevoir mon estimation</button>
 
-   <div style="background: #e6f3e6; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
-  <strong style="color: #0056d6; font-size: 1.1em; display: block; margin-bottom: 8px;">💡 Vous ne subissez plus votre facture</strong>
-  <p style="margin-bottom: 10px;">✅ Vous investissez dans votre propre électricité. Finies les factures sans fin, place à une production qui vous appartient.</p>
-  <p style="margin-bottom: 0;">🏡 En plus, vous valorisez durablement votre bien immobilier — un vrai atout en cas de revente.</p>
-</div>
-  <div id="taegInfo"></div>
-
-    <p style="font-size: 0.85em; color: #444; margin-top: 15px;" id="mentions"></p>
+    <p style="margin-top: 20px; font-size: 14px; line-height: 1.4; text-align: center;">
+      ⭐⭐⭐⭐⭐ <strong>4,9/5 sur Google</strong> – Plus de 400 foyers accompagnés en France.<br>
+      🔒 Vos données ne seront jamais revendues. Aucun démarchage automatique.
+    </p>
   </div>
-  <!-- À coller immédiatement APRÈS ceci :
-<p style="font-size: 0.85em; color: #444; margin-top: 15px;" id="mentions"></p>
-</div> -->
-
-<div id="blocMail" style="display: none; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-top: 30px; max-width: 700px; margin-left: auto; margin-right: auto;">
-
-  <p style="font-size: 1.2em; font-weight: bold; margin-bottom: 8px;">
-    ✉️ Recevez cette estimation complète par email
-  </p>
-  <p style="margin-bottom: 20px;">
-    Et si vous souhaitez un échange pour affiner le projet selon <strong>votre toiture</strong>, <strong>vos besoins</strong> ou <strong>vos contraintes</strong>, vous pouvez aussi laisser votre numéro (facultatif).<br>
-    ➕ <strong>C’est rapide, sans engagement.</strong>
-  </p>
-
-  <form>
-    <input type="email" placeholder="Votre adresse email" required />
-
-    
-    <input type="tel" id="phone" placeholder="Votre numéro (pour être rappelé si vous le souhaitez)" />
-
-
-    
-    <button type="submit"
-      style="width: 100%; background: #0056d6; color: white; border: none; padding: 14px; font-size: 1.05em; border-radius: 8px; font-weight: bold; cursor: pointer;">
-      Recevoir mon estimation
-    </button>
-  </form>
-  <div id="confirmationMessage" style="display: none; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 15px; border-radius: 6px; margin-top: 15px; font-size: 1em;">
-  ✅ Votre estimation a bien été envoyée ! Vous allez la recevoir par email dans quelques instants.
-</div>
-
-
-  <div style="margin-top: 20px; font-size: 0.9em; color: #444;">
-    <p style="margin: 10px 0;">⭐️⭐️⭐️⭐️⭐️ <strong>4,9/5 sur Google</strong> – Plus de 400 foyers accompagnés en France.</p>
-    <p style="margin: 10px 0;">🔒 Vos données ne seront jamais revendues. Aucun démarchage automatique.</p>
-  </div>
-</div>
-
-
 
   <script>
-    
+    let scenarios = [];
 
-    function afficherBlocFinancement(scenario, economieMensuelle, gain15ans) {
-      const offre = {
-  prix: scenario.prix,
-  mensualite: scenario.mensualite,
-  taeg: scenario.taeg,
-  total: scenario.total
-};
-
-
-      if (offre) {
-        document.getElementById("ecoMensuelle").innerHTML = `<strong>${Math.round(economieMensuelle).toLocaleString('fr-FR')} €</strong>`;
-        document.getElementById("eco15Texte").innerText = `${Math.round(gain15ans).toLocaleString('fr-FR')} €`;
-
-        document.getElementById("mensualiteTexte").innerHTML = `
-  <strong>Une mensualité fixe de ${offre.mensualite.toFixed(2).replace('.', ',')} €*</strong>
-  pour financer cette installation <strong>clé en main</strong> — et ainsi devenir
-  <strong>propriétaire de votre production solaire</strong>.`;
-       
-document.getElementById("taegInfo").innerHTML = `
-  <div style="background: #ffffff; border-left: 4px solid #ffc107; padding: 15px 20px; margin-top: 25px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.05);">
-    <p style="margin: 0 0 8px 0;">🔶 Exceptionnel : TAEG fixe à 3,96 % sur 180 mois</strong>.</p>
-
-    <p style="margin: 0;">⚠️ <strong>Offre valable uniquement jusqu’au 15/07/2025</strong></p>
-  </div>
-`;
-
-
-
-       document.getElementById("mentions").innerText = `
-* Exemple : installation ${scenario.puissance} à ${offre.prix.toLocaleString('fr-FR')} €
-financement sur 180 mois au TAEG fixe de ${offre.taeg.toFixed(2).replace('.', ',')} %, mensualité ${offre.mensualite.toFixed(2).replace('.', ',')} € (hors assurance).
-Coût total du financement hors assurance : ${offre.total.toLocaleString('fr-FR')} €.
-Financement proposé par notre partenaire Projexio, sous réserve d’acceptation. Un crédit vous engage et doit être remboursé.
-Vérifiez vos capacités de remboursement avant de vous engager.`;
-
-
-        document.getElementById("offre").style.display = "block";
-      }
+    function fetchScenarios(departement) {
+      return fetch('https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec')
+        .then(response => response.json())
+        .then(data => data.filter(row => row.Departement == departement).map(row => ({
+          puissance: row.Puissance,
+          prod: parseFloat(row.Prod),
+          seuil: parseFloat(row.Seuil),
+          panels: parseInt(row.Panels),
+          prix: parseFloat(row.Prix),
+          mensualite: parseFloat(row.Mensualite),
+          taeg: parseFloat(row.Taeg),
+          total: parseFloat(row.Total)
+        })))
+        .catch(error => {
+          console.error("Erreur lors du chargement des données :", error);
+          alert("Impossible de charger les données, réessayez plus tard.");
+          return [];
+        });
     }
 
+    async function calculerSimulation() {
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('recap').style.display = 'none';
+      document.getElementById('resultat').style.display = 'none';
+      document.getElementById('emailBloc').style.display = 'none';
 
+      const codePostal = document.getElementById('codePostal').value.trim();
+      const conso = parseFloat(document.getElementById('conso').value);
+      const facture = parseFloat(document.getElementById('facture').value);
 
+      if (!/^[0-9]{5}$/.test(codePostal)) {
+        alert("Veuillez entrer un code postal valide.");
+        return;
+      }
+      if (isNaN(conso) || isNaN(facture) || conso <= 0 || facture <= 0) {
+        alert("Merci de remplir correctement tous les champs.");
+        return;
+      }
 
-document.getElementById("simuler").addEventListener("click", function calculerSimulation() {
-  const codePostal = document.getElementById("codePostal").value.trim();
-  const conso = parseFloat(document.getElementById('conso').value);
-  const facture = parseFloat(document.getElementById('facture').value);
+      const departement = codePostal.substring(0, 2);
+      scenarios = await fetchScenarios(departement);
 
-  if (!codePostal || isNaN(conso) || isNaN(facture) || conso <= 0 || facture <= 0) {
-    alert("Merci de remplir correctement tous les champs.");
-    return;
-  }
+      if (scenarios.length === 0) {
+        alert("Aucune donnée disponible pour ce département.");
+        return;
+      }
 
-  const url = "https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec?codePostal=" + codePostal;
-
-  fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      const scenarios = data.map(item => ({
-        puissance: item.Puissance,
-        prod: parseInt(item.Prod),
-        seuil: parseInt(item.Seuil),
-        panels: parseInt(item.Panels),
-        prix: parseFloat(item.Prix),
-        mensualite: parseFloat(item.Mensualite),
-        taeg: parseFloat(item.Taeg),
-        total: parseFloat(item.Total)
-      }));
+      document.getElementById('loading').style.display = 'none';
 
       const prixKwh = facture / conso;
-      const scenario = [...scenarios].reverse().find(s => s.prod <= conso) || scenarios[0];
+      const scenario = [...scenarios].reverse().find(s => s.prod * 1.05 <= conso) || scenarios[0];
       scenarios.reverse();
 
       const autoKwh = scenario.prod * 0.6;
@@ -434,8 +218,7 @@ document.getElementById("simuler").addEventListener("click", function calculerSi
       const coutAcheminement = stockKwh * acheminement;
       const factureApres = factureAvant - autoValue - stockValue + coutAcheminement;
       const economieAnnuelle = factureAvant - factureApres;
-      const economieAnnuelleCorrigee = Math.min(economieAnnuelle, facture);
-      const economieMensuelle = economieAnnuelleCorrigee / 12;
+      const economieMensuelle = economieAnnuelle / 12;
 
       let gain15ans = 0;
       let prixActuel = prixKwh;
@@ -450,91 +233,143 @@ document.getElementById("simuler").addEventListener("click", function calculerSi
         prixActuel *= 1.05;
       }
 
-      document.getElementById('recap').style.display = 'block';
-      document.getElementById('resultat').style.display = 'block';
-      document.getElementById('blocMail').style.display = 'block';
-      document.getElementById('blocImagePV').style.display = 'block';
-
-      document.getElementById('recap').innerHTML = `
-        <p>🔌 <strong>Consommation annuelle actuelle</strong> : ${conso.toLocaleString('fr-FR')} kWh</p>
-        <p>💶 <strong>Facture annuelle actuelle</strong> : ${facture.toLocaleString('fr-FR')} €</p>
-        <p>⚡ <strong>Prix moyen du kWh</strong> : ${prixKwh.toFixed(3)} €</p>
-        <br>
-        <p>☀️ <strong>Installation recommandée</strong> : ${scenario.puissance} — ${scenario.panels} panneaux photovoltaïques de 500 W</p>
-        <p>🔧 <strong>Production solaire estimée</strong> : ${scenario.prod.toLocaleString('fr-FR')} kWh/an</p>
+      const recapHTML = `
+        Code postal : ${codePostal}<br>
+        Consommation annuelle : ${conso.toLocaleString('fr-FR')} kWh<br>
+        Prix du kWh : ${prixKwh.toFixed(3)} €<br>
+        Facture annuelle : ${facture.toLocaleString('fr-FR')} €<br>
+        Puissance installée : ${scenario.puissance} soit ${scenario.panels} panneaux photovoltaïques de 500 W<br>
+        Production annuelle : ${scenario.prod.toLocaleString('fr-FR')} kWh<br>
+        <strong>Cela représente ${(scenario.prod / conso * 100).toFixed(2)}% de votre consommation annuelle.</strong>
       `;
+      const recap = document.getElementById('recap');
+      recap.innerHTML = recapHTML;
+      recap.style.display = 'block';
+      recap.style.visibility = 'visible';
+      recap.style.height = 'auto';
+      recap.style.padding = '20px';
+      recap.style.margin = '0 auto 20px auto';
+      recap.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+      recap.style.border = '1px solid #e0e0e0';
 
-      document.getElementById('resultat').innerHTML = `
-        <div style="background: #ffffff; border: 3px solid #0077b6; padding: 24px; border-radius: 12px; margin-top: 25px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); font-size: 1.05em; line-height: 1.6;">
-          <p><strong style="color:#0077b6; font-size: 1.15em;">💶 Gain estimé la 1ʳᵉ année :</strong> ${Math.round(economieAnnuelleCorrigee).toLocaleString('fr-FR')} €</p>
-          <p style="margin-top: -8px;">🔁 soit environ <strong>${Math.round(economieMensuelle).toLocaleString('fr-FR')} €</strong> par mois</p>
-          <p><strong style="color:#0077b6; font-size: 1.15em;">📈 Économie sur 15 ans :</strong> ${Math.round(gain15ans).toLocaleString('fr-FR')} €</p>
-          <hr style="margin: 20px 0; border: none; border-top: 1px dashed #bbb;">
-          <p style="color:#333;"><strong>✅ Estimation réalisée à partir de vos données.</strong><br>
-          Pour aller plus loin : une étude gratuite peut adapter ce projet à votre toiture et vos besoins réels.</p>
+      const result = document.getElementById('resultat');
+      result.innerHTML = `
+        <div class="item"><strong>Gain estimé la 1ère année :</strong> ${economieAnnuelle.toFixed(0)} €</div>
+        <div class="item"><strong>Gain par mois :</strong> ${economieMensuelle.toFixed(0)} €</div>
+        <div class="item"><strong>Économie cumulée sur 15 ans :</strong> ${gain15ans.toFixed(0)} €</div>
+        <hr>
+        <div class="item">
+          <strong>🔄 Ce que nous vous proposons</strong><br>
+          🗖 Et si vous remplaciez votre facture d’électricité par un investissement utile ?<br><br>
+          💡 Chaque mois, au lieu de payer votre fournisseur, vous autofinancez votre propre installation solaire.<br><br>
+          ⚡ Une mensualité fixe de <strong>${scenario.mensualite.toFixed(2)} €</strong>* pour financer cette installation clé en main — et ainsi devenir propriétaire de votre production solaire.<br><br>
+          ✅ Ce n’est pas une dépense en plus, c’est à la place de ce que vous payez déjà.<br><br>
+          🎯 Résultat ? Vous devenez propriétaire de votre production d’électricité, tout en disant stop aux hausses de tarifs.
+        </div>
+        <div class="finance-details">
+          * Exemple : installation ${scenario.puissance} à ${scenario.prix.toLocaleString('fr-FR')} €<br>
+          financement sur 180 mois au TAEG fixe de ${scenario.taeg.toFixed(2)} %, mensualité ${scenario.mensualite.toFixed(2)} € (hors assurance).<br>
+          Coût total du financement hors assurance : ${scenario.total.toLocaleString('fr-FR')} €.<br>
+          Financement proposé par notre partenaire Projexio, sous réserve d’acceptation. Un crédit vous engage et doit être remboursé.<br>
+          Vérifiez vos capacités de remboursement avant de vous engager.
         </div>
       `;
+      result.style.display = 'block';
+      result.style.visibility = 'visible';
+      result.style.height = 'auto';
+      result.style.padding = '20px';
+      result.style.margin = '0 auto 20px auto';
+      result.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+      result.style.border = '1px solid #e0e0e0';
 
-      afficherBlocFinancement(scenario, economieMensuelle, gain15ans);
-      // Envoi vers Sheets : inchangé
-      // Formattage téléphone : inchangé
-    })
-    .catch(error => {
-      console.error("Erreur lors du chargement des scénarios :", error);
-      alert("Erreur lors du chargement des données du simulateur.");
-    });
-});
-
-
-        document.getElementById("phone").addEventListener("input", function (e) {
-    let value = e.target.value.replace(/\D/g, "").substring(0, 10);
-    let formatted = "";
-
-    for (let i = 0; i < value.length; i += 2) {
-      if (i > 0) formatted += " ";
-      formatted += value.substring(i, i + 2);
+      const emailBloc = document.getElementById('emailBloc');
+      emailBloc.style.display = 'block';
+      emailBloc.style.visibility = 'visible';
+      emailBloc.style.height = 'auto';
+      emailBloc.style.padding = '20px';
+      emailBloc.style.margin = '0 auto 20px auto';
+      emailBloc.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+      emailBloc.style.border = '1px solid #e0e0e0';
     }
 
-    e.target.value = formatted;
-  });
+   function envoyerEstimation() {
+  const codePostal = document.getElementById('codePostal').value.trim();
+  const conso = parseFloat(document.getElementById('conso').value);
+  const facture = parseFloat(document.getElementById('facture').value);
+  const email = document.getElementById('emailUser').value.trim();
+  const tel = document.getElementById('telUser').value.trim();
 
-
-  </script>
-
-<script>
-  // Base de départ fixée arbitrairement (ex. : 1 234 simulations le 1er mai 2025)
-  const baseCount = 1234;
-
-  // Date de départ du compteur : 1er mai 2025 à 00:00:00
-  const startDate = new Date('2025-05-01T00:00:00Z');
-
-  function updateCompteur() {
-    const now = new Date();
-    const secondsElapsed = Math.floor((now - startDate) / 1000);
-    const increments = Math.floor(secondsElapsed / 47); // 1 simulation toutes les 47 secondes
-    const total = baseCount + increments;
-    const compteurElement = document.getElementById('compteurValeur');
-const current = parseInt(compteurElement.innerText.replace(/\s/g, ''), 10) || 0;
-const duration = 3000;
-const frames = 90;
-const increment = (total - current) / frames;
-let frame = 0;
-
-const animate = () => {
-  frame++;
-  const value = Math.round(current + increment * frame);
-  compteurElement.innerText = value.toLocaleString('fr-FR');
-  if (frame < frames) requestAnimationFrame(animate);
-};
-
-animate();
-
+  if (!email) {
+    alert("Merci de renseigner votre adresse email pour recevoir votre estimation.");
+    return;
   }
 
-  // Mise à jour immédiate puis toutes les secondes
-  updateCompteur();
-  setInterval(updateCompteur, 1000);
-</script>
+  const scenario = scenarios[0]; // Le scénario déjà sélectionné précédemment
+  const prixKwh = facture / conso;
+  const autoKwh = scenario.prod * 0.6;
+  const stockKwh = scenario.prod * 0.4;
+  const acheminement = 0.05;
 
+  const factureAvant = conso * prixKwh;
+  const autoValue = autoKwh * prixKwh;
+  const stockValue = stockKwh * prixKwh;
+  const coutAcheminement = stockKwh * acheminement;
+  const factureApres = factureAvant - autoValue - stockValue + coutAcheminement;
+  const economieAnnuelle = factureAvant - factureApres;
+  const economieMensuelle = economieAnnuelle / 12;
+
+  let gain15ans = 0;
+  let prixActuel = prixKwh;
+  for (let i = 0; i < 15; i++) {
+    const autoVal = autoKwh * prixActuel;
+    const stockVal = stockKwh * prixActuel;
+    const coutAch = stockKwh * acheminement;
+    const factureAv = conso * prixActuel;
+    const factureAp = factureAv - autoVal - stockVal + coutAch;
+    const economie = factureAv - factureAp;
+    gain15ans += economie;
+    prixActuel *= 1.05;
+  }
+
+  const donnees = {
+    code_postal: codePostal,
+    conso: conso,
+    facture: facture,
+    prod: scenario.prod,
+    eco1: economieAnnuelle.toFixed(0),
+    ecomensuelle: economieMensuelle.toFixed(0),
+    eco15: gain15ans.toFixed(0),
+    puissance: scenario.puissance,
+    panneaux: scenario.panels,
+    prix: scenario.prix,
+    mensualite: scenario.mensualite,
+    taeg: scenario.taeg,
+    totalcredit: scenario.total,
+    email: email,
+    tel: tel
+  };
+
+  fetch('https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec', {
+    method: 'POST',
+    body: JSON.stringify(donnees),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .then(response => response.text())
+  .then(result => {
+    if (result === "OK") {
+      alert("✅ Estimation bien envoyée ! Vous la recevrez très bientôt.");
+    } else {
+      alert("❌ Une erreur s’est produite : " + result);
+    }
+  })
+  .catch(error => {
+    console.error("Erreur d'envoi :", error);
+    alert("Erreur d’envoi. Veuillez réessayer.");
+  });
+}
+
+  </script>
 </body>
 </html>

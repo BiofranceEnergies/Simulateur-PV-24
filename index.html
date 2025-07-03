@@ -294,6 +294,7 @@
 
 function envoyerEstimation() {
   const codePostal = document.getElementById('codePostal').value.trim();
+  const departement = codePostal.substring(0, 2);
   const conso = parseFloat(document.getElementById('conso').value);
   const facture = parseFloat(document.getElementById('facture').value);
   const email = document.getElementById('emailUser').value.trim();
@@ -304,7 +305,9 @@ function envoyerEstimation() {
     return;
   }
 
-  const scenario = scenarios[0];
+  // 🔍 Sélection automatique du bon scénario selon le département
+  const scenario = scenarios.find(s => s.Code === departement) || scenarios[0];
+
   const prixKwh = facture / conso;
   const autoKwh = scenario.prod * 0.6;
   const stockKwh = scenario.prod * 0.4;
@@ -354,12 +357,9 @@ function envoyerEstimation() {
     body: formData
   });
 
-  // Message immédiat (pas de retour possible avec no-cors)
   alert("✅ Estimation bien envoyée ! Merci.");
 }
-
-
-  </script>
+</script>
 </body>
 </html>
 

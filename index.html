@@ -133,14 +133,14 @@
     <input type="tel" id="telUser" placeholder="Votre numéro (pour être rappelé si vous le souhaitez)">
     <button onclick="envoyerEstimation()">📩 Recevoir mon estimation</button>
 
-      <p id="confirmationMessage" style="display: none; color: green; font-weight: bold; margin-top: 15px; text-align: center;">
-  ✅ Estimation bien envoyée ! Un email vient de vous être adressé.
-</p>
-
-      
     <p style="margin-top: 20px; font-size: 14px; line-height: 1.4; text-align: center;">
       ⭐⭐⭐⭐⭐ <strong>4,9/5 sur Google</strong> – Plus de 400 foyers accompagnés en France.<br>
       🔒 Vos données ne seront jamais revendues. Aucun démarchage automatique.
+    </p>
+    
+    <!-- Message de confirmation caché par défaut -->
+    <p id="confirmationMessage" style="display: none; color: green; font-weight: bold; margin-top: 15px; text-align: center;">
+      ✅ Estimation bien envoyée ! Un email vient de vous être adressé.
     </p>
   </div>
 
@@ -220,8 +220,7 @@
         const coutAch = stockKwh * acheminement;
         const factureAv = conso * prixActuel;
         const factureAp = factureAv - autoVal - stockVal + coutAch;
-        const economie = factureAv - factureAp;
-        gain15ans += economie;
+        gain15ans += factureAv - factureAp;
         prixActuel *= 1.05;
       }
 
@@ -261,84 +260,81 @@
       document.getElementById('emailBloc').style = "display:block;visibility:visible;height:auto;padding:20px;margin:0 auto 20px auto;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e0e0;";
     }
 
-function envoyerEstimation() {
-  const codePostal = document.getElementById('codePostal').value.trim();
-  const conso = parseFloat(document.getElementById('conso').value);
-  const facture = parseFloat(document.getElementById('facture').value);
-  const email = document.getElementById('emailUser').value.trim();
-  const tel = document.getElementById('telUser').value.trim();
+    function envoyerEstimation() {
+      const codePostal = document.getElementById('codePostal').value.trim();
+      const conso = parseFloat(document.getElementById('conso').value);
+      const facture = parseFloat(document.getElementById('facture').value);
+      const email = document.getElementById('emailUser').value.trim();
+      const tel = document.getElementById('telUser').value.trim();
 
-  if (!email) {
-    alert("Merci de renseigner votre adresse email pour recevoir votre estimation.");
-    return;
-  }
+      if (!email) {
+        alert("Merci de renseigner votre adresse email pour recevoir votre estimation.");
+        return;
+      }
 
-  if (!selectedScenario) {
-    alert("Scénario non défini. Veuillez d'abord lancer une simulation.");
-    return;
-  }
+      if (!selectedScenario) {
+        alert("Scénario non défini. Veuillez d'abord lancer une simulation.");
+        return;
+      }
 
-  const prixKwh = facture / conso;
-  const autoKwh = selectedScenario.prod * 0.6;
-  const stockKwh = selectedScenario.prod * 0.4;
-  const acheminement = 0.05;
+      const prixKwh = facture / conso;
+      const autoKwh = selectedScenario.prod * 0.6;
+      const stockKwh = selectedScenario.prod * 0.4;
+      const acheminement = 0.05;
 
-  const factureAvant = conso * prixKwh;
-  const autoValue = autoKwh * prixKwh;
-  const stockValue = stockKwh * prixKwh;
-  const coutAcheminement = stockKwh * acheminement;
-  const factureApres = factureAvant - autoValue - stockValue + coutAcheminement;
-  const economieAnnuelle = factureAvant - factureApres;
-  const economieMensuelle = economieAnnuelle / 12;
+      const factureAvant = conso * prixKwh;
+      const autoValue = autoKwh * prixKwh;
+      const stockValue = stockKwh * prixKwh;
+      const coutAcheminement = stockKwh * acheminement;
+      const factureApres = factureAvant - autoValue - stockValue + coutAcheminement;
+      const economieAnnuelle = factureAvant - factureApres;
+      const economieMensuelle = economieAnnuelle / 12;
 
-  let gain15ans = 0;
-  let prixActuel = prixKwh;
-  for (let i = 0; i < 15; i++) {
-    const autoVal = autoKwh * prixActuel;
-    const stockVal = stockKwh * prixActuel;
-    const coutAch = stockKwh * acheminement;
-    const factureAv = conso * prixActuel;
-    const factureAp = factureAv - autoVal - stockVal + coutAch;
-    gain15ans += factureAv - factureAp;
-    prixActuel *= 1.05;
-  }
+      let gain15ans = 0;
+      let prixActuel = prixKwh;
+      for (let i = 0; i < 15; i++) {
+        const autoVal = autoKwh * prixActuel;
+        const stockVal = stockKwh * prixActuel;
+        const coutAch = stockKwh * acheminement;
+        const factureAv = conso * prixActuel;
+        const factureAp = factureAv - autoVal - stockVal + coutAch;
+        gain15ans += factureAv - factureAp;
+        prixActuel *= 1.05;
+      }
 
-  const formData = new FormData();
-  formData.append("code_postal", codePostal);
-  formData.append("conso", conso);
-  formData.append("facture", facture);
-  formData.append("prod", selectedScenario.prod);
-  formData.append("eco1", economieAnnuelle.toFixed(0));
-  formData.append("ecomensuelle", economieMensuelle.toFixed(0));
-  formData.append("eco15", gain15ans.toFixed(0));
-  formData.append("puissance", selectedScenario.puissance);
-  formData.append("panneaux", selectedScenario.panels);
-  formData.append("prix", selectedScenario.prix);
-  formData.append("mensualite", selectedScenario.mensualite);
-  formData.append("taeg", selectedScenario.taeg);
-  formData.append("totalcredit", selectedScenario.total);
-  formData.append("email", email);
-  formData.append("tel", tel);
+      const formData = new FormData();
+      formData.append("code_postal", codePostal);
+      formData.append("conso", conso);
+      formData.append("facture", facture);
+      formData.append("prod", selectedScenario.prod);
+      formData.append("eco1", economieAnnuelle.toFixed(0));
+      formData.append("ecomensuelle", economieMensuelle.toFixed(0));
+      formData.append("eco15", gain15ans.toFixed(0));
+      formData.append("puissance", selectedScenario.puissance);
+      formData.append("panneaux", selectedScenario.panels);
+      formData.append("prix", selectedScenario.prix);
+      formData.append("mensualite", selectedScenario.mensualite);
+      formData.append("taeg", selectedScenario.taeg);
+      formData.append("totalcredit", selectedScenario.total);
+      formData.append("email", email);
+      formData.append("tel", tel);
 
-  fetch('https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec', {
-    method: 'POST',
-    mode: 'no-cors',
-    body: formData
-  });
+      fetch('https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData
+      });
 
-  // Appel de la fonction pour envoyer l'email avec les résultats de la simulation
-  sendSimulationEmail(email, selectedScenario, economieAnnuelle, economieMensuelle, gain15ans);
+      // Appel de la fonction pour envoyer l'email avec les résultats de la simulation
+      sendSimulationEmail(email, selectedScenario, economieAnnuelle, economieMensuelle, gain15ans);
 
-  const message = document.getElementById("confirmationMessage");
-message.style.display = "block";
-message.style.visibility = "visible";
-message.style.height = "auto";
-message.style.marginTop = "15px";
-
-
-}
-
-
+      // Affichage du message de confirmation
+      const message = document.getElementById("confirmationMessage");
+      message.style.display = "block";
+      message.style.visibility = "visible"; 
+      message.style.height = "auto";
+      message.style.marginTop = "15px";
+    }
   </script>
 </body>
 </html>

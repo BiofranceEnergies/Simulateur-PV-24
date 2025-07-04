@@ -132,6 +132,12 @@
     <input type="email" id="emailUser" placeholder="Votre adresse email">
     <input type="tel" id="telUser" placeholder="Votre numéro (pour être rappelé si vous le souhaitez)">
     <button onclick="envoyerEstimation()">📩 Recevoir mon estimation</button>
+
+      <p id="confirmationMessage" style="display: none; color: green; font-weight: bold; margin-top: 15px; text-align: center;">
+  ✅ Estimation bien envoyée ! Un email vient de vous être adressé.
+</p>
+
+      
     <p style="margin-top: 20px; font-size: 14px; line-height: 1.4; text-align: center;">
       ⭐⭐⭐⭐⭐ <strong>4,9/5 sur Google</strong> – Plus de 400 foyers accompagnés en France.<br>
       🔒 Vos données ne seront jamais revendues. Aucun démarchage automatique.
@@ -323,7 +329,13 @@ function envoyerEstimation() {
   // Appel de la fonction pour envoyer l'email avec les résultats de la simulation
   sendSimulationEmail(email, selectedScenario, economieAnnuelle, economieMensuelle, gain15ans);
 
-  alert("✅ Estimation bien envoyée ! Merci.");
+  const message = document.getElementById("confirmationMessage");
+message.style.display = "block";
+message.style.visibility = "visible";
+message.style.height = "auto";
+message.style.marginTop = "15px";
+
+
 }
 
 

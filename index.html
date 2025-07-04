@@ -17,6 +17,12 @@
       margin-bottom: 30px;
       font-size: 24px;
     }
+    .logo {
+      display: block;
+      margin: 0 auto 20px auto;
+      max-width: 80%;
+      height: auto;
+    }
     .form-section,
     .recap,
     .result,
@@ -105,7 +111,19 @@
   </style>
 </head>
 <body>
+
+  <img src="https://raw.githubusercontent.com/BiofranceEnergies/biofrance-images/73ba9368d7b1da286c54b1f2c4ee3ce7dc2c7497/Logo%20biofrance%20energie%20-webp.webp" alt="Logo de l'entreprise" class="logo">
+    
   <h1>En 3 secondes, découvrez votre économie et le chiffrage de votre projet solaire.</h1>
+
+  <div style="text-align: center; margin-bottom: 30px; font-size: 16px; color: #333;">
+    <p>
+      Notre simulateur, propulsé par une intelligence artificielle avancée, vous offre une estimation rapide, fiable et précise de vos économies solaires. En quelques secondes, obtenez une analyse complète et un calcul détaillé pour une installation clé en main. 
+    </p>
+    <p>
+      Avec Biofrance Énergie, tout est transparent et sans engagement, sans avoir à remplir de formulaire.
+    </p>
+  </div>
 
   <div class="form-section">
     <h2>Vos données de consommation</h2>
@@ -138,7 +156,6 @@
       🔒 Vos données ne seront jamais revendues. Aucun démarchage automatique.
     </p>
 
-    <!-- Message de confirmation -->
     <p id="confirmationMessage" style="display: none; color: green; font-weight: bold; margin-top: 15px; text-align: center;">
       ✅ Estimation bien envoyée ! Un email vient de vous être adressé.
     </p>
@@ -168,7 +185,6 @@
     }
 
     async function calculerSimulation() {
-      console.log("Calcul de la simulation démarré");  // Ajout d'un log pour vérifier si la fonction se lance
       document.getElementById('loading').style.display = 'block';
       document.getElementById('recap').style.display = 'none';
       document.getElementById('resultat').style.display = 'none';
@@ -187,8 +203,6 @@
         return;
       }
 
-      console.log("Données de consommation validées : ", codePostal, conso, facture); // Log les données saisies
-
       const departement = codePostal.substring(0, 2);
       scenarios = await fetchScenarios(departement);
       if (scenarios.length === 0) {
@@ -200,7 +214,7 @@
 
       const prixKwh = facture / conso;
       const scenario = [...scenarios].reverse().find(s => s.prod * 1.05 <= conso) || scenarios[0];
-      window.selectedScenario = scenario; // 🔧 Sauvegarde du bon scénario
+      window.selectedScenario = scenario;
       scenarios.reverse();
 
       const autoKwh = scenario.prod * 0.6;
@@ -228,31 +242,38 @@
         prixActuel *= 1.05;
       }
 
-      console.log("Simulation calculée, affichage des résultats.");
-
       document.getElementById('recap').innerHTML = `
         Code postal : ${codePostal}<br>
         Consommation annuelle : ${conso.toLocaleString('fr-FR')} kWh<br>
-        Prix du kWh : ${prixKwh.toFixed(3)} €<br>
-        Facture annuelle : ${facture.toLocaleString('fr-FR')} €<br>
-        Puissance installée : ${scenario.puissance} soit ${scenario.panels} panneaux photovoltaïques de 500 W<br>
-        Production annuelle : ${scenario.prod.toLocaleString('fr-FR')} kWh<br>
-        <strong>Cela représente ${(scenario.prod / conso * 100).toFixed(2)}% de votre consommation annuelle.</strong>
+        Prix du kWh TTC : ${prixKwh.toFixed(3)} €<br>
+        Facture annuelle : ${facture.toLocaleString('fr-FR')} €<br><br>
+        Puissance installée : ${scenario.puissance} soit ${scenario.panels} panneaux photovoltaïques de 500 W<br><br>
+        Production annuelle : <span style="color: #6bc286; font-weight: bold;">${scenario.prod.toLocaleString('fr-FR')}</span> kWh<br><br>
+        <strong>Cela représente ${(scenario.prod / conso * 100).toFixed(2)}% de votre consommation annuelle.</strong><br>
+        <span style="display:inline-block; margin-top:10px; color:#2b7a0b; font-size:15px; font-weight:bold;">
+          Grâce à la batterie virtuelle, vous valorisez 100 % de votre production solaire, sans rien perdre !
+        </span>
       `;
       document.getElementById('recap').style = "display:block;visibility:visible;height:auto;padding:20px;margin:0 auto 20px auto;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e0e0;";
       
       document.getElementById('resultat').innerHTML = `
-        <div class="item"><strong>Gain estimé la 1ère année :</strong> ${economieAnnuelle.toFixed(0)} €</div>
-        <div class="item"><strong>Gain par mois :</strong> ${economieMensuelle.toFixed(0)} €</div>
-        <div class="item"><strong>Économie cumulée sur 15 ans :</strong> ${gain15ans.toFixed(0)} €</div>
+        <div class="item"><strong>Gain estimé la 1ère année :</strong> <span style="color: #6bc286; font-weight: bold;">${Math.round(economieAnnuelle).toLocaleString('fr-FR')}</span> €</div><br>
+        <div class="item"><strong>Soit un gain par mois de :</strong> <span style="color: #6bc286; font-weight: bold;">${Math.round(economieMensuelle).toLocaleString('fr-FR')}</span> €</div><br>
+        <div class="item"><strong>Économie cumulée sur 15 ans :</strong> <span style="color: #6bc286; font-weight: bold;">${Math.round(gain15ans).toLocaleString('fr-FR')}</span> €</div>
         <hr>
         <div class="item">
-          <strong>🔄 Ce que nous vous proposons</strong><br>
+          <strong>🔄 Ce que nous vous proposons</strong><br><br>
           🗖 Et si vous remplaciez votre facture d’électricité par un investissement utile ?<br><br>
           💡 Chaque mois, au lieu de payer votre fournisseur, vous autofinancez votre propre installation solaire.<br><br>
-          ⚡ Une mensualité fixe de <strong>${scenario.mensualite.toFixed(2)} €</strong>* pour financer cette installation clé en main — et ainsi devenir propriétaire de votre production solaire.<br><br>
+          ⚡ Une mensualité fixe de <strong>${scenario.mensualite.toLocaleString('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</strong>* pour financer cette installation clé en main — et ainsi devenir propriétaire de votre production solaire.<br><br>
           ✅ Ce n’est pas une dépense en plus, c’est à la place de ce que vous payez déjà.<br><br>
           🎯 Résultat ? Vous devenez propriétaire de votre production d’électricité, tout en disant stop aux hausses de tarifs.
+        </div>
+        <div style="font-size: 12px; color: #888; margin-top: 12px;">
+          * Exemple : installation ${scenario.puissance} à ${scenario.prix.toLocaleString('fr-FR')} € TTC, financement sur 180 mois au TAEG fixe de ${scenario.taeg.toFixed(2)} %, mensualité ${scenario.mensualite.toLocaleString('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € (hors assurance).<br>
+          Coût total du financement hors assurance : ${scenario.total.toLocaleString('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €.<br>
+          Financement proposé par notre partenaire Projexio, sous réserve d’acceptation.<br>
+          <strong>Un crédit vous engage et doit être remboursé. Vérifiez vos capacités de remboursement avant de vous engager.</strong>
         </div>
       `;
       document.getElementById('resultat').style = "display:block;visibility:visible;height:auto;padding:20px;margin:0 auto 20px auto;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e0e0;";
@@ -324,14 +345,13 @@
         body: formData
       });
 
-      // Affichage du message après 1 seconde
       setTimeout(() => {
         const message = document.getElementById("confirmationMessage");
         message.style.display = "block";
         message.style.visibility = "visible"; 
         message.style.height = "auto";
         message.style.marginTop = "15px";
-      }, 1000); // Délai de 1 seconde avant l'affichage
+      }, 1000);
     }
   </script>
 </body>

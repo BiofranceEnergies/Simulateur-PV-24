@@ -137,8 +137,8 @@
       ⭐⭐⭐⭐⭐ <strong>4,9/5 sur Google</strong> – Plus de 400 foyers accompagnés en France.<br>
       🔒 Vos données ne seront jamais revendues. Aucun démarchage automatique.
     </p>
-    
-    <!-- Message de confirmation caché par défaut -->
+
+    <!-- Message de confirmation -->
     <p id="confirmationMessage" style="display: none; color: green; font-weight: bold; margin-top: 15px; text-align: center;">
       ✅ Estimation bien envoyée ! Un email vient de vous être adressé.
     </p>
@@ -168,6 +168,7 @@
     }
 
     async function calculerSimulation() {
+      console.log("Calcul de la simulation démarré");  // Ajout d'un log pour vérifier si la fonction se lance
       document.getElementById('loading').style.display = 'block';
       document.getElementById('recap').style.display = 'none';
       document.getElementById('resultat').style.display = 'none';
@@ -185,6 +186,8 @@
         alert("Merci de remplir correctement tous les champs.");
         return;
       }
+
+      console.log("Données de consommation validées : ", codePostal, conso, facture); // Log les données saisies
 
       const departement = codePostal.substring(0, 2);
       scenarios = await fetchScenarios(departement);
@@ -220,9 +223,12 @@
         const coutAch = stockKwh * acheminement;
         const factureAv = conso * prixActuel;
         const factureAp = factureAv - autoVal - stockVal + coutAch;
-        gain15ans += factureAv - factureAp;
+        const economie = factureAv - factureAp;
+        gain15ans += economie;
         prixActuel *= 1.05;
       }
+
+      console.log("Simulation calculée, affichage des résultats.");
 
       document.getElementById('recap').innerHTML = `
         Code postal : ${codePostal}<br>
@@ -247,13 +253,6 @@
           ⚡ Une mensualité fixe de <strong>${scenario.mensualite.toFixed(2)} €</strong>* pour financer cette installation clé en main — et ainsi devenir propriétaire de votre production solaire.<br><br>
           ✅ Ce n’est pas une dépense en plus, c’est à la place de ce que vous payez déjà.<br><br>
           🎯 Résultat ? Vous devenez propriétaire de votre production d’électricité, tout en disant stop aux hausses de tarifs.
-        </div>
-        <div class="finance-details">
-          * Exemple : installation ${scenario.puissance} à ${scenario.prix.toLocaleString('fr-FR')} €<br>
-          financement sur 180 mois au TAEG fixe de ${scenario.taeg.toFixed(2)} %, mensualité ${scenario.mensualite.toFixed(2)} € (hors assurance).<br>
-          Coût total du financement hors assurance : ${scenario.total.toLocaleString('fr-FR')} €.<br>
-          Financement proposé par notre partenaire Projexio, sous réserve d’acceptation. Un crédit vous engage et doit être remboursé.<br>
-          Vérifiez vos capacités de remboursement avant de vous engager.
         </div>
       `;
       document.getElementById('resultat').style = "display:block;visibility:visible;height:auto;padding:20px;margin:0 auto 20px auto;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e0e0;";
@@ -325,15 +324,14 @@
         body: formData
       });
 
-      // Appel de la fonction pour envoyer l'email avec les résultats de la simulation
-      sendSimulationEmail(email, selectedScenario, economieAnnuelle, economieMensuelle, gain15ans);
-
-      // Affichage du message de confirmation
-      const message = document.getElementById("confirmationMessage");
-      message.style.display = "block";
-      message.style.visibility = "visible"; 
-      message.style.height = "auto";
-      message.style.marginTop = "15px";
+      // Affichage du message après 1 seconde
+      setTimeout(() => {
+        const message = document.getElementById("confirmationMessage");
+        message.style.display = "block";
+        message.style.visibility = "visible"; 
+        message.style.height = "auto";
+        message.style.marginTop = "15px";
+      }, 1000); // Délai de 1 seconde avant l'affichage
     }
   </script>
 </body>

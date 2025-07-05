@@ -113,7 +113,21 @@
 <body>
 
   <img src="https://raw.githubusercontent.com/BiofranceEnergies/biofrance-images/73ba9368d7b1da286c54b1f2c4ee3ce7dc2c7497/Logo%20biofrance%20energie%20-webp.webp" alt="Logo de l'entreprise" class="logo">
-    
+
+  <!-- Compteur dans une bulle -->
+  <div style="text-align:center; margin-bottom:22px;">
+    <div style="
+      display:inline-block;
+      background:#e6f3eb;
+      border-radius:18px;
+      box-shadow:0 4px 16px rgba(0,80,32,0.07);
+      padding:14px 30px 12px 30px;
+      min-width:180px;">
+      <span id="compteurValeur" style="font-size:38px; color:#197c3e; font-weight:900; letter-spacing:2px; display:block; line-height:1.15;">1 234</span>
+      <span style="color:#1a1a1a; font-size:16px; font-weight:700; display:block; margin-top:2px;">simulations réalisées depuis le 1er mai 2025</span>
+    </div>
+  </div>
+
   <h1>En 3 secondes, découvrez votre économie et le chiffrage de votre projet solaire.</h1>
 
   <div style="text-align: center; margin-bottom: 30px; font-size: 16px; color: #333;">
@@ -152,7 +166,7 @@
     <button onclick="envoyerEstimation()">📩 Recevoir mon estimation</button>
 
     <p style="margin-top: 20px; font-size: 14px; line-height: 1.4; text-align: center;">
-      ⭐⭐⭐⭐⭐ <strong>4,9/5 sur Google</strong> – Plus de 400 foyers accompagnés en France.<br>
+      ⭐⭐⭐⭐⭐ <strong>4,5/5 sur Google</strong> – Plus de 6400 foyers accompagnés en France.<br>
       🔒 Vos données ne seront jamais revendues. Aucun démarchage automatique.
     </p>
 
@@ -248,7 +262,7 @@
         Prix du kWh TTC : ${prixKwh.toFixed(3)} €<br>
         Facture annuelle : ${facture.toLocaleString('fr-FR')} €<br><br>
         Puissance installée : ${scenario.puissance} soit ${scenario.panels} panneaux photovoltaïques de 500 W<br><br>
-        Production annuelle : <span style="color: #6bc286; font-weight: bold;">${scenario.prod.toLocaleString('fr-FR')}</span> kWh<br><br>
+        Production annuelle : <span style="color: #2b7a0b; font-weight: bold;">${scenario.prod.toLocaleString('fr-FR')}</span> kWh<br><br>
         <strong>Cela représente ${(scenario.prod / conso * 100).toFixed(2)}% de votre consommation annuelle.</strong><br>
         <span style="display:inline-block; margin-top:10px; color:#2b7a0b; font-size:15px; font-weight:bold;">
           Grâce à la batterie virtuelle, vous valorisez 100 % de votre production solaire, sans rien perdre !
@@ -257,9 +271,9 @@
       document.getElementById('recap').style = "display:block;visibility:visible;height:auto;padding:20px;margin:0 auto 20px auto;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e0e0;";
       
       document.getElementById('resultat').innerHTML = `
-        <div class="item"><strong>Gain estimé la 1ère année :</strong> <span style="color: #6bc286; font-weight: bold;">${Math.round(economieAnnuelle).toLocaleString('fr-FR')}</span> €</div><br>
-        <div class="item"><strong>Soit un gain par mois de :</strong> <span style="color: #6bc286; font-weight: bold;">${Math.round(economieMensuelle).toLocaleString('fr-FR')}</span> €</div><br>
-        <div class="item"><strong>Économie cumulée sur 15 ans :</strong> <span style="color: #6bc286; font-weight: bold;">${Math.round(gain15ans).toLocaleString('fr-FR')}</span> €</div>
+        <div class="item"><strong>Gain estimé la 1ère année :</strong> <span style="color: #2b7a0b; font-weight: bold;">${Math.round(economieAnnuelle).toLocaleString('fr-FR')}</span> €</div><br>
+        <div class="item"><strong>Soit un gain par mois de :</strong> <span style="color: #2b7a0b; font-weight: bold;">${Math.round(economieMensuelle).toLocaleString('fr-FR')}</span> €</div><br>
+        <div class="item"><strong>Économie cumulée sur 15 ans :</strong> <span style="color: #2b7a0b; font-weight: bold;">${Math.round(gain15ans).toLocaleString('fr-FR')}</span> €</div>
         <hr>
         <div class="item">
           <strong>🔄 Ce que nous vous proposons</strong><br><br>
@@ -354,5 +368,40 @@
       }, 1000);
     }
   </script>
+
+  <!-- Script du compteur dynamique -->
+  <script>
+    // Base de départ fixée arbitrairement (ex. : 1 234 simulations le 1er mai 2025)
+    const baseCount = 1234;
+
+    // Date de départ du compteur : 1er mai 2025 à 00:00:00
+    const startDate = new Date('2025-05-01T00:00:00Z');
+
+    function updateCompteur() {
+      const now = new Date();
+      const secondsElapsed = Math.floor((now - startDate) / 1000);
+      const increments = Math.floor(secondsElapsed / 47); // 1 simulation toutes les 47 secondes
+      const total = baseCount + increments;
+      const compteurElement = document.getElementById('compteurValeur');
+      const current = parseInt(compteurElement.innerText.replace(/\s/g, ''), 10) || 0;
+      const duration = 3000;
+      const frames = 90;
+      const increment = (total - current) / frames;
+      let frame = 0;
+
+      const animate = () => {
+        frame++;
+        const value = Math.round(current + increment * frame);
+        compteurElement.innerText = value.toLocaleString('fr-FR');
+        if (frame < frames) requestAnimationFrame(animate);
+      };
+
+      animate();
+    }
+
+    updateCompteur();
+    setInterval(updateCompteur, 1000);
+  </script>
+
 </body>
 </html>

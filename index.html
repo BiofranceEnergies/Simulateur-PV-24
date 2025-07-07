@@ -92,10 +92,6 @@
       animation: spin 1s linear infinite;
       margin: 10px auto;
     }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
     /* Témoignages styles */
     .temoignages-titre {
       color: #198754;
@@ -186,11 +182,11 @@
     </p>
   </div>
 
-  <div class="form-section">
+  <div class="form-section" id="formSection">
     <h2>Vos données de consommation</h2>
-    <input type="text" id="codePostal" placeholder="Votre code postal" maxlength="5">
-    <input type="number" id="conso" placeholder="Votre conso annuelle (kWh)">
-    <input type="number" id="facture" placeholder="Votre facture annuelle (€)">
+    <input type="text" id="codePostal" placeholder="Votre code postal" maxlength="5" autocomplete="postal-code">
+    <input type="number" id="conso" placeholder="Votre conso annuelle (kWh)" inputmode="numeric">
+    <input type="number" id="facture" placeholder="Votre facture annuelle (€)" inputmode="numeric">
     <button onclick="calculerSimulation()">🔍 Lancer la simulation</button>
   </div>
 
@@ -265,6 +261,26 @@
   <script>
     let scenarios = [];
 
+    // --- ERGONOMIE MOBILE --- //
+    // Scroll auto sur la zone de saisie si écran < 600px
+    function scrollToForm() {
+      const formSection = document.getElementById('formSection');
+      if (window.innerWidth < 600) {
+        // petit délai pour laisser le clavier apparaître
+        setTimeout(() => {
+          formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 80);
+      }
+    }
+    // Sur chaque champ, scroll auto au focus
+    ['codePostal','conso','facture'].forEach(id => {
+      document.addEventListener('DOMContentLoaded', function() {
+        const el = document.getElementById(id);
+        el.addEventListener('focus', scrollToForm);
+        el.addEventListener('input', scrollToForm);
+      });
+    });
+
     function fetchScenarios(departement) {
       return fetch('https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec')
         .then(response => response.json())
@@ -286,6 +302,9 @@
     }
 
     async function calculerSimulation() {
+      // On force le scroll tout en haut pour toujours voir le "calcul en cours" sur mobile
+      if(window.innerWidth < 600) window.scrollTo({top: 0, behavior: 'smooth'});
+
       document.getElementById('loading').style.display = 'block';
       document.getElementById('recap').style.display = 'none';
       document.getElementById('resultat').style.display = 'none';

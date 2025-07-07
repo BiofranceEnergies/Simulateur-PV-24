@@ -26,7 +26,8 @@
     .form-section,
     .recap,
     .result,
-    #emailBloc {
+    #emailBloc,
+    #temoignagesBloc {
       width: 100%;
       max-width: 600px;
       background: #ffffff;
@@ -95,17 +96,63 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    /* Témoignages styles */
+    .temoignages-titre {
+      color: #198754;
+      font-weight: bold;
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 18px;
+      margin-top: 0;
+    }
+    #temoignagesBloc {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,128,0,0.07);
+      border: 1px solid #e0e0e0;
+      margin-top: 32px;
+      padding: 26px 22px;
+      display: none;
+      visibility: hidden;
+      height: 0;
+      overflow: hidden;
+    }
+    .temoignage {
+      margin-bottom: 22px;
+      background: #f7f9f7;
+      border-radius: 10px;
+      padding: 16px 18px;
+      border-left: 4px solid #2b7a0b;
+    }
+    .stars {
+      color: #ffbe22;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    .region {
+      color: #1a8b4d;
+      font-size: 1em;
+      margin-left: 6px;
+      font-style: italic;
+    }
     @media (max-width: 480px) {
       h1 {
         font-size: 20px;
         line-height: 1.4;
       }
       .form-section h2,
-      #emailBloc h2 {
+      #emailBloc h2,
+      .temoignages-titre {
         font-size: 16px;
       }
       .finance-details {
         font-size: 13px;
+      }
+      #temoignagesBloc {
+        padding: 16px 4vw;
+      }
+      .temoignage {
+        padding: 12px 6px;
       }
     }
   </style>
@@ -142,8 +189,8 @@
   <div class="form-section">
     <h2>Vos données de consommation</h2>
     <input type="text" id="codePostal" placeholder="Votre code postal" maxlength="5">
-    <input type="number" id="conso" placeholder="Votre conso (kWh)">
-    <input type="number" id="facture" placeholder="Votre facture (€)">
+    <input type="number" id="conso" placeholder="Votre conso annuelle (kWh)">
+    <input type="number" id="facture" placeholder="Votre facture annuelle (€)">
     <button onclick="calculerSimulation()">🔍 Lancer la simulation</button>
   </div>
 
@@ -175,6 +222,46 @@
     </p>
   </div>
 
+  <!-- Bloc témoignages caché par défaut -->
+  <div id="temoignagesBloc" style="display:none; visibility:hidden; height:0; overflow:hidden; padding:26px 22px; background:#fff; border-radius:14px; box-shadow:0 4px 12px rgba(0,128,0,0.07); border:1px solid #e0e0e0; margin-top:32px;">
+    <div class="temoignages-titre">Ils l'ont testé&nbsp;</div>
+    <div class="temoignage">
+      <span class="stars">★★★★★</span>
+      <br>
+      “C’est la première fois que j’ai une estimation aussi claire et transparente sans avoir à laisser mes coordonnées partout. Bravo pour la démarche honnête !”
+      <br>
+      <span class="region">– Michel L., Périgueux</span>
+    </div>
+    <div class="temoignage">
+      <span class="stars">★★★★★</span>
+      <br>
+      “J’ai apprécié la rapidité du simulateur et le fait d’obtenir un chiffrage complet sans démarchage. Je recommande.”
+      <br>
+      <span class="region">– Sophie G., Sarlat</span>
+    </div>
+    <div class="temoignage">
+      <span class="stars">★★★★★</span>
+      <br>
+      “J’ai pu comparer facilement avant de me décider, et Biofrance Énergie m’a rappelé quand j’étais prêt. Service sérieux, rien à redire.”
+      <br>
+      <span class="region">– Paul D., Bergerac</span>
+    </div>
+    <div class="temoignage">
+      <span class="stars">★★★★★</span>
+      <br>
+      “C’est la première fois qu’on me donne autant d’infos sans rien demander en retour. Contact très professionnel ensuite.”
+      <br>
+      <span class="region">– Claire F., Nontron</span>
+    </div>
+    <div class="temoignage">
+      <span class="stars">★★★★★</span>
+      <br>
+      “J’ai pu faire mon choix sans pression. Après avoir reçu l’étude, j’ai contacté Biofrance pour finaliser, je recommande sans hésiter.”
+      <br>
+      <span class="region">– Jean-Pierre T., Terrasson</span>
+    </div>
+  </div>
+
   <script>
     let scenarios = [];
 
@@ -203,6 +290,9 @@
       document.getElementById('recap').style.display = 'none';
       document.getElementById('resultat').style.display = 'none';
       document.getElementById('emailBloc').style.display = 'none';
+      document.getElementById('temoignagesBloc').style.display = 'none';
+      document.getElementById('temoignagesBloc').style.visibility = 'hidden';
+      document.getElementById('temoignagesBloc').style.height = '0';
 
       const codePostal = document.getElementById('codePostal').value.trim();
       const conso = parseFloat(document.getElementById('conso').value);
@@ -269,7 +359,7 @@
         </span>
       `;
       document.getElementById('recap').style = "display:block;visibility:visible;height:auto;padding:20px;margin:0 auto 20px auto;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e0e0;";
-      
+
       document.getElementById('resultat').innerHTML = `
         <div class="item"><strong>Gain estimé la 1ère année :</strong> <span style="color: #2b7a0b; font-weight: bold;">${Math.round(economieAnnuelle).toLocaleString('fr-FR')}</span> €</div><br>
         <div class="item"><strong>Soit un gain par mois de :</strong> <span style="color: #2b7a0b; font-weight: bold;">${Math.round(economieMensuelle).toLocaleString('fr-FR')}</span> €</div><br>
@@ -283,15 +373,26 @@
           ✅ Ce n’est pas une dépense en plus, c’est à la place de ce que vous payez déjà.<br><br>
           🎯 Résultat ? Vous devenez propriétaire de votre production d’électricité, tout en disant stop aux hausses de tarifs.
         </div>
-        <div style="font-size: 12px; color: #888; margin-top: 12px;">
-          * Exemple : installation ${scenario.puissance} à ${scenario.prix.toLocaleString('fr-FR')} € TTC, financement sur 180 mois au TAEG fixe de ${scenario.taeg.toFixed(2)} %, mensualité ${scenario.mensualite.toLocaleString('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € (hors assurance).<br>
-          Coût total du financement hors assurance : ${scenario.total.toLocaleString('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €.<br>
-          Financement proposé par notre partenaire Projexio, sous réserve d’acceptation.<br>
-          <strong>Un crédit vous engage et doit être remboursé. Vérifiez vos capacités de remboursement avant de vous engager.</strong>
+        <div style="background:#f7f9f7; border-left:4px solid #198754; border-radius:12px; padding:14px 18px 12px 14px; margin-top:22px; font-size:16px; color:#222;">
+          <span style="display:inline-block; vertical-align:middle; margin-right:8px;">
+            <svg width="26" height="26" style="vertical-align:middle;" viewBox="0 0 24 24" fill="#8dc2a7"><circle cx="12" cy="12" r="12"/><text x="7" y="18" font-size="14" font-weight="bold" fill="#fff">i</text></svg>
+          </span>
+          <span>
+            * Votre installation ${scenario.puissance} : ${scenario.prix.toLocaleString('fr-FR')} € TTC, financement sur 180 mois au TAEG fixe de ${scenario.taeg.toFixed(2)} %, mensualité <strong>${scenario.mensualite.toLocaleString('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</strong> (hors assurance).<br>
+            Coût total du financement hors assurance : ${scenario.total.toLocaleString('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €.<br>
+            Financement proposé par notre partenaire Projexio, sous réserve d’acceptation.<br>
+            <strong>Un crédit vous engage et doit être remboursé. Vérifiez vos capacités de remboursement avant de vous engager.</strong>
+          </span>
         </div>
       `;
       document.getElementById('resultat').style = "display:block;visibility:visible;height:auto;padding:20px;margin:0 auto 20px auto;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e0e0;";
       document.getElementById('emailBloc').style = "display:block;visibility:visible;height:auto;padding:20px;margin:0 auto 20px auto;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e0e0;";
+
+      // Affiche le bloc témoignages avec marge et padding corrects
+      const bloc = document.getElementById('temoignagesBloc');
+      bloc.style.display = 'block';
+      bloc.style.visibility = 'visible';
+      bloc.style.height = 'auto';
     }
 
     function envoyerEstimation() {
@@ -402,6 +503,5 @@
     updateCompteur();
     setInterval(updateCompteur, 1000);
   </script>
-
 </body>
 </html>

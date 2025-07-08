@@ -96,7 +96,6 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    /* Témoignages styles */
     .temoignages-titre {
       color: #198754;
       font-weight: bold;
@@ -135,33 +134,122 @@
       margin-left: 6px;
       font-style: italic;
     }
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 20px;
-        line-height: 1.4;
+    #cookie-banner {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #222;
+      color: #fff;
+      font-size: 15px;
+      line-height: 1.5;
+      padding: 18px 12px 16px 12px;
+      text-align: center;
+      z-index: 9999;
+      box-shadow: 0 -2px 12px rgba(0,0,0,0.09);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.25s;
+    }
+    #cookie-banner button {
+      background: #198754;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 8px 28px;
+      margin-top: 10px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      transition: background 0.18s;
+    }
+    #cookie-banner button:hover {
+      background: #145e39;
+    }
+    /* Mentions légales dans le flux, non flottant */
+    #mentions-legales-container {
+      width: 100%;
+      text-align: center;
+      margin-top: 32px;
+      margin-bottom: 10px;
+      display: none; /* affiché après simulation */
+    }
+    #mentions-legales-link {
+      color: #2279b5;
+      font-size: 15px;
+      text-decoration: underline;
+      cursor: pointer;
+      background: transparent;
+      padding: 2px 7px;
+      border-radius: 7px;
+      font-weight: 500;
+      transition: color 0.18s, background 0.18s;
+      display: inline-block;
+    }
+    #mentions-legales-link:hover {
+      color: #145e39;
+      background: #d3efe3;
+    }
+    #mentions-popup {
+      display: none;
+      position: fixed;
+      bottom: 54px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 320px;
+      max-width: 95vw;
+      background: #21282b;
+      color: #f2f2f2;
+      border-radius: 13px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.16);
+      padding: 18px 22px 12px 22px;
+      z-index: 10000;
+      font-size: 13px;
+      line-height: 1.7;
+      border: 2px solid #5fffad;
+      animation: popupfade 0.22s;
+    }
+    @keyframes popupfade {
+      from {opacity:0;transform:translateY(30px);}
+      to {opacity:1;transform:translateY(0);}
+    }
+    #mentions-popup strong {
+      color: #5fffad;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    #close-mentions {
+      position: absolute;
+      top: 7px;
+      right: 14px;
+      background: none;
+      color: #f2f2f2;
+      border: none;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 0;
+    }
+    @media (max-width: 500px) {
+      #mentions-popup {
+        width: 92vw;
+        left: 2vw;
+        transform: none;
+        bottom: 50px;
+        padding: 12px 8px 10px 10px;
+        font-size: 11px;
       }
-      .form-section h2,
-      #emailBloc h2,
-      .temoignages-titre {
-        font-size: 16px;
-      }
-      .finance-details {
+      #mentions-legales-link {
         font-size: 13px;
-      }
-      #temoignagesBloc {
-        padding: 16px 4vw;
-      }
-      .temoignage {
-        padding: 12px 6px;
       }
     }
   </style>
 </head>
 <body>
-
   <img src="https://raw.githubusercontent.com/BiofranceEnergies/biofrance-images/73ba9368d7b1da286c54b1f2c4ee3ce7dc2c7497/Logo%20biofrance%20energie%20-webp.webp" alt="Logo de l'entreprise" class="logo">
 
-  <!-- Compteur dans une bulle -->
   <div style="text-align:center; margin-bottom:22px;">
     <div style="
       display:inline-block;
@@ -211,18 +299,15 @@
     <input type="email" id="emailUser" placeholder="Votre adresse email">
     <input type="tel" id="telUser" placeholder="Votre numéro (Facultatif)">
     <button onclick="envoyerEstimation()">📩 Recevoir mon estimation</button>
-
     <p style="margin-top: 20px; font-size: 14px; line-height: 1.4; text-align: center;">
       ⭐⭐⭐⭐⭐ <strong>4,5/5 sur Google</strong> – Plus de 6400 foyers accompagnés en France.<br>
       🔒 Vos données ne seront jamais revendues. Aucun démarchage automatique.
     </p>
-
     <p id="confirmationMessage" style="display: none; color: green; font-weight: bold; margin-top: 15px; text-align: center;">
       ✅ Estimation bien envoyée ! Un email vient de vous être adressé.
     </p>
   </div>
 
-  <!-- Bloc témoignages caché par défaut -->
   <div id="temoignagesBloc" style="display:none; visibility:hidden; height:0; overflow:hidden; padding:26px 22px; background:#fff; border-radius:14px; box-shadow:0 4px 12px rgba(0,128,0,0.07); border:1px solid #e0e0e0; margin-top:32px;">
     <div class="temoignages-titre">Ils l'ont testé&nbsp;</div>
     <div class="temoignage">
@@ -262,8 +347,70 @@
     </div>
   </div>
 
+  <div id="cookie-banner" style="display: none;">
+    <span>
+      Ce site utilise des cookies strictement nécessaires au fonctionnement du simulateur et à la mesure d’audience. 
+      <br>En poursuivant votre navigation, vous acceptez leur utilisation. 
+    </span>
+    <button id="cookie-ok">OK, j’ai compris</button>
+  </div>
+
+  <!-- MENTIONS LÉGALES EN BAS DU FLUX, PAS FLOTTANT -->
+  <div id="mentions-legales-container">
+    <span id="mentions-legales-link">Mentions légales</span>
+  </div>
+
+  <!-- POPUP MENTIONS LÉGALES -->
+  <div id="mentions-popup" style="display:none;">
+    <button id="close-mentions" aria-label="Fermer">&times;</button>
+    <strong>Mentions légales :</strong><br>
+    Conseils Energies Durables – Matignon Sylvain<br>
+    SIRET : 422 231 928 00025<br>
+    Adresse : 4 rue du Pont Saint Jean, 27530 Ézy-sur-Eure<br>
+    Contact : conseilsenergiesdurables@gmail.com<br>
+    Hébergeur : GitHub Pages, 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA<br>
+    Données personnelles : Les informations saisies sont utilisées uniquement pour traiter votre demande. Aucun démarchage ni revente.<br>
+    RGPD : Vous pouvez demander la suppression de vos données à tout moment par simple email.
+  </div>
+
   <script>
+    // Cookie banner logic
+    document.addEventListener("DOMContentLoaded", function() {
+      if (!localStorage.getItem("cookieConsentPV2025")) {
+        document.getElementById("cookie-banner").style.display = "flex";
+      }
+      document.getElementById("cookie-ok").onclick = function() {
+        localStorage.setItem("cookieConsentPV2025", "1");
+        document.getElementById("cookie-banner").style.display = "none";
+      };
+
+      // Mise en forme auto du téléphone (fonctionne même après affichage dynamique du bloc)
+      var telInput = document.getElementById('telUser');
+      if(telInput) {
+        telInput.addEventListener('input', function(e) {
+          let val = e.target.value.replace(/\D/g, '').slice(0, 10);
+          let format = val.replace(/(\d{2})(?=\d)/g, '$1 ').trim();
+          e.target.value = format;
+        });
+      }
+    });
+
     let scenarios = [];
+
+    // Mentions légales JS
+    function afficherLienMentionsLegales() {
+      document.getElementById('mentions-legales-container').style.display = 'block';
+    }
+    function masquerLienMentionsLegales() {
+      document.getElementById('mentions-legales-container').style.display = 'none';
+      document.getElementById('mentions-popup').style.display = 'none';
+    }
+    document.getElementById('mentions-legales-link').onclick = function() {
+      document.getElementById('mentions-popup').style.display = 'block';
+    };
+    document.getElementById('close-mentions').onclick = function() {
+      document.getElementById('mentions-popup').style.display = 'none';
+    };
 
     function fetchScenarios(departement) {
       return fetch('https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec')
@@ -287,7 +434,6 @@
 
     async function calculerSimulation() {
       document.getElementById('loading').style.display = 'block';
-      // Ajout pour centrer le spinner sur l'écran lors du calcul
       document.getElementById('loading').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       document.getElementById('recap').style.display = 'none';
@@ -296,6 +442,7 @@
       document.getElementById('temoignagesBloc').style.display = 'none';
       document.getElementById('temoignagesBloc').style.visibility = 'hidden';
       document.getElementById('temoignagesBloc').style.height = '0';
+      masquerLienMentionsLegales();
 
       const codePostal = document.getElementById('codePostal').value.trim();
       const conso = parseFloat(document.getElementById('conso').value);
@@ -319,6 +466,7 @@
 
       document.getElementById('loading').style.display = 'none';
 
+      // Calculs et affichage résultats (inchangé)
       const prixKwh = facture / conso;
       const scenario = [...scenarios].reverse().find(s => s.prod * 1.05 <= conso) || scenarios[0];
       window.selectedScenario = scenario;
@@ -399,11 +547,25 @@
       document.getElementById('resultat').style = "display:block;visibility:visible;height:auto;padding:20px;margin:0 auto 20px auto;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e0e0;";
       document.getElementById('emailBloc').style = "display:block;visibility:visible;height:auto;padding:20px;margin:0 auto 20px auto;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e0e0;";
 
-      // Affiche le bloc témoignages avec marge et padding corrects
+      // Affiche le bloc témoignages
       const bloc = document.getElementById('temoignagesBloc');
       bloc.style.display = 'block';
       bloc.style.visibility = 'visible';
       bloc.style.height = 'auto';
+
+      // Affiche le lien Mentions légales après simulation (dans le flux, pas flottant)
+      afficherLienMentionsLegales();
+
+      // Activation dynamique du format téléphone (utile si emailBloc vient d'être affiché)
+      var telInput = document.getElementById('telUser');
+      if (telInput && !telInput.hasAttribute('data-format-listener')) {
+        telInput.addEventListener('input', function(e) {
+          let val = e.target.value.replace(/\D/g, '').slice(0, 10);
+          let format = val.replace(/(\d{2})(?=\d)/g, '$1 ').trim();
+          e.target.value = format;
+        });
+        telInput.setAttribute('data-format-listener', '1');
+      }
     }
 
     function envoyerEstimation() {
@@ -411,7 +573,8 @@
       const conso = parseFloat(document.getElementById('conso').value);
       const facture = parseFloat(document.getElementById('facture').value);
       const email = document.getElementById('emailUser').value.trim();
-      const tel = document.getElementById('telUser').value.trim();
+      // Pour l'envoi, on enlève les espaces éventuels dans le numéro de téléphone
+      const tel = document.getElementById('telUser').value.replace(/\D/g, '');
 
       if (!email) {
         alert("Merci de renseigner votre adresse email pour recevoir votre estimation.");
@@ -479,20 +642,14 @@
         message.style.marginTop = "15px";
       }, 1000);
     }
-  </script>
 
-  <!-- Script du compteur dynamique -->
-  <script>
-    // Base de départ fixée arbitrairement (ex. : 1 234 simulations le 1er mai 2025)
+    // Script du compteur dynamique (inchangé)
     const baseCount = 1234;
-
-    // Date de départ du compteur : 1er mai 2025 à 00:00:00
     const startDate = new Date('2025-05-01T00:00:00Z');
-
     function updateCompteur() {
       const now = new Date();
       const secondsElapsed = Math.floor((now - startDate) / 1000);
-      const increments = Math.floor(secondsElapsed / 47); // 1 simulation toutes les 47 secondes
+      const increments = Math.floor(secondsElapsed / 47);
       const total = baseCount + increments;
       const compteurElement = document.getElementById('compteurValeur');
       const current = parseInt(compteurElement.innerText.replace(/\s/g, ''), 10) || 0;
@@ -500,17 +657,14 @@
       const frames = 90;
       const increment = (total - current) / frames;
       let frame = 0;
-
       const animate = () => {
         frame++;
         const value = Math.round(current + increment * frame);
         compteurElement.innerText = value.toLocaleString('fr-FR');
         if (frame < frames) requestAnimationFrame(animate);
       };
-
       animate();
     }
-
     updateCompteur();
     setInterval(updateCompteur, 1000);
   </script>

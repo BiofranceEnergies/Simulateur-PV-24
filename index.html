@@ -246,6 +246,57 @@
       }
     }
   </style>
+
+    <!-- Meta Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+
+  fbq('init', '4077327712591041');
+  fbq('track', 'PageView');
+
+  // 🎯 Écoute le message "fbq-lead" envoyé depuis le formulaire
+  window.addEventListener("message", function(event) {
+    if (event.data === "fbq-lead" && typeof fbq === "function") {
+      fbq('track', 'Lead');
+    }
+  });
+
+  // 🎯 Suivi du clic sur le bouton de simulation
+  document.addEventListener("DOMContentLoaded", function () {
+    const boutonSimuler = document.getElementById("simuler");
+    if (boutonSimuler) {
+      boutonSimuler.addEventListener("click", function () {
+        if (typeof fbq === "function") {
+          fbq('trackCustom', 'SimulateurUtilise');
+          console.log("✅ fbq SimulateurUtilise envoyé");
+        }
+      });
+    }
+
+    // 🔍 Suivi Google Apps Script via image invisible
+    const params = new URLSearchParams(window.location.search);
+    const source = params.get("from") || "direct";
+    const userAgent = "SiteW";
+
+    const img = document.createElement("img");
+    img.src = `https://script.google.com/macros/s/AKfycbxt0po8cZNTMKGNBwqW-fEieOKib6HHJUGk6bXTQMgWv07GAJVSrFuJ5rf2qekTMaXfGw/exec?ua=${userAgent}&source=${source}`;
+    img.style.display = "none";
+    document.body.appendChild(img);
+  });
+</script>
+
+<noscript>
+  <img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=4077327712591041&ev=PageView&noscript=1" />
+</noscript>
+<!-- End Meta Pixel Code -->
 </head>
 <body>
   <img src="https://raw.githubusercontent.com/BiofranceEnergies/biofrance-images/73ba9368d7b1da286c54b1f2c4ee3ce7dc2c7497/Logo%20biofrance%20energie%20-webp.webp" alt="Logo de l'entreprise" class="logo">

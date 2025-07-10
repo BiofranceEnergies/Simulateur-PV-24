@@ -168,13 +168,12 @@
     #cookie-banner button:hover {
       background: #145e39;
     }
-    /* Mentions légales dans le flux, non flottant */
     #mentions-legales-container {
       width: 100%;
       text-align: center;
       margin-top: 32px;
       margin-bottom: 10px;
-      display: none; /* affiché après simulation */
+      display: none;
     }
     #mentions-legales-link {
       color: #2279b5;
@@ -246,61 +245,50 @@
       }
     }
   </style>
-
-    <!-- Meta Pixel Code -->
-<script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-
-  fbq('init', '4077327712591041');
-  fbq('track', 'PageView');
-
-  // 🎯 Écoute le message "fbq-lead" envoyé depuis le formulaire
-  window.addEventListener("message", function(event) {
-    if (event.data === "fbq-lead" && typeof fbq === "function") {
-      fbq('track', 'Lead');
-    }
-  });
-
-  // 🎯 Suivi du clic sur le bouton de simulation
-  document.addEventListener("DOMContentLoaded", function () {
-    const boutonSimuler = document.getElementById("simuler");
-    if (boutonSimuler) {
-      boutonSimuler.addEventListener("click", function () {
-        if (typeof fbq === "function") {
-          fbq('trackCustom', 'SimulateurUtilise');
-          console.log("✅ fbq SimulateurUtilise envoyé");
-        }
-      });
-    }
-
-    // 🔍 Suivi Google Apps Script via image invisible
-    const params = new URLSearchParams(window.location.search);
-    const source = params.get("from") || "direct";
-    const userAgent = "SiteW";
-
-    const img = document.createElement("img");
-    img.src = `https://script.google.com/macros/s/AKfycbxt0po8cZNTMKGNBwqW-fEieOKib6HHJUGk6bXTQMgWv07GAJVSrFuJ5rf2qekTMaXfGw/exec?ua=${userAgent}&source=${source}`;
-    img.style.display = "none";
-    document.body.appendChild(img);
-  });
-</script>
-
-<noscript>
-  <img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=4077327712591041&ev=PageView&noscript=1" />
-</noscript>
-<!-- End Meta Pixel Code -->
+  <!-- Meta Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '4077327712591041');
+    fbq('track', 'PageView');
+    window.addEventListener("message", function(event) {
+      if (event.data === "fbq-lead" && typeof fbq === "function") {
+        fbq('track', 'Lead');
+      }
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+      const boutonSimuler = document.getElementById("simuler");
+      if (boutonSimuler) {
+        boutonSimuler.addEventListener("click", function () {
+          if (typeof fbq === "function") {
+            fbq('trackCustom', 'SimulateurUtilise');
+            console.log("✅ fbq SimulateurUtilise envoyé");
+          }
+        });
+      }
+      const params = new URLSearchParams(window.location.search);
+      const source = params.get("from") || "direct";
+      const userAgent = "SiteW";
+      const img = document.createElement("img");
+      img.src = `https://script.google.com/macros/s/AKfycbxt0po8cZNTMKGNBwqW-fEieOKib6HHJUGk6bXTQMgWv07GAJVSrFuJ5rf2qekTMaXfGw/exec?ua=${userAgent}&source=${source}`;
+      img.style.display = "none";
+      document.body.appendChild(img);
+    });
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=4077327712591041&ev=PageView&noscript=1" />
+  </noscript>
+  <!-- End Meta Pixel Code -->
 </head>
 <body>
   <img src="https://raw.githubusercontent.com/BiofranceEnergies/biofrance-images/73ba9368d7b1da286c54b1f2c4ee3ce7dc2c7497/Logo%20biofrance%20energie%20-webp.webp" alt="Logo de l'entreprise" class="logo">
-
   <div style="text-align:center; margin-bottom:22px;">
     <div style="
       display:inline-block;
@@ -313,9 +301,7 @@
       <span style="color:#1a1a1a; font-size:16px; font-weight:700; display:block; margin-top:2px;">simulations réalisées depuis le 1er mai 2025</span>
     </div>
   </div>
-
   <h1>En 3 secondes, découvrez votre économie et le chiffrage de votre projet solaire.</h1>
-
   <div style="text-align: center; margin-bottom: 30px; font-size: 16px; color: #333;">
     <p>
       Notre simulateur, propulsé par une intelligence artificielle avancée, vous offre une estimation rapide, fiable et précise de vos économies solaires. En quelques secondes, obtenez une analyse complète et un calcul détaillé pour une installation clé en main. 
@@ -324,7 +310,6 @@
       Avec Biofrance Énergie, tout est transparent et sans engagement, sans avoir à remplir de formulaire.
     </p>
   </div>
-
   <div class="form-section">
     <h2>Vos données de consommation</h2>
     <input type="text" id="codePostal" placeholder="Votre code postal" maxlength="5">
@@ -332,15 +317,12 @@
     <input type="number" id="facture" placeholder="Votre facture elec annuelle (€)">
     <button id="simuler" onclick="calculerSimulation()">🔍 Lancer la simulation</button>
   </div>
-
   <div id="loading" style="display: none; text-align: center; margin-top: 20px;">
     <div class="spinner"></div>
     <p style="font-size: 14px; color: #555;">Veuillez patienter... Calcul en cours</p>
   </div>
-
   <div id="recap" class="recap"></div>
   <div id="resultat" class="result"></div>
-
   <div id="emailBloc">
     <h2>📧 Recevez cette estimation complète par email</h2>
     <p style="text-align:left; font-size: 15px; line-height: 1.6; color: #333;">
@@ -358,7 +340,6 @@
       ✅ Estimation bien envoyée ! Un email vient de vous être adressé.
     </p>
   </div>
-
   <div id="temoignagesBloc" style="display:none; visibility:hidden; height:0; overflow:hidden; padding:26px 22px; background:#fff; border-radius:14px; box-shadow:0 4px 12px rgba(0,128,0,0.07); border:1px solid #e0e0e0; margin-top:32px;">
     <div class="temoignages-titre">Ils l'ont testé&nbsp;</div>
     <div class="temoignage">
@@ -397,7 +378,6 @@
       <span class="region">– Jean-Pierre T., Terrasson</span>
     </div>
   </div>
-
   <div id="cookie-banner" style="display: none;">
     <span>
       Ce site utilise des cookies strictement nécessaires au fonctionnement du simulateur et à la mesure d’audience. 
@@ -405,13 +385,9 @@
     </span>
     <button id="cookie-ok">OK, j’ai compris</button>
   </div>
-
-  <!-- MENTIONS LÉGALES EN BAS DU FLUX, PAS FLOTTANT -->
   <div id="mentions-legales-container">
     <span id="mentions-legales-link">Mentions légales</span>
   </div>
-
-  <!-- POPUP MENTIONS LÉGALES -->
   <div id="mentions-popup" style="display:none;">
     <button id="close-mentions" aria-label="Fermer">&times;</button>
     <strong>Mentions légales :</strong><br>
@@ -423,9 +399,7 @@
     Données personnelles : Les informations saisies sont utilisées uniquement pour traiter votre demande. Aucun démarchage ni revente.<br>
     RGPD : Vous pouvez demander la suppression de vos données à tout moment par simple email.
   </div>
-
   <script>
-    // Cookie banner logic
     document.addEventListener("DOMContentLoaded", function() {
       if (!localStorage.getItem("cookieConsentPV2025")) {
         document.getElementById("cookie-banner").style.display = "flex";
@@ -434,8 +408,6 @@
         localStorage.setItem("cookieConsentPV2025", "1");
         document.getElementById("cookie-banner").style.display = "none";
       };
-
-      // Mise en forme auto du téléphone (fonctionne même après affichage dynamique du bloc)
       var telInput = document.getElementById('telUser');
       if(telInput) {
         telInput.addEventListener('input', function(e) {
@@ -445,10 +417,7 @@
         });
       }
     });
-
     let scenarios = [];
-
-    // Mentions légales JS
     function afficherLienMentionsLegales() {
       document.getElementById('mentions-legales-container').style.display = 'block';
     }
@@ -462,7 +431,6 @@
     document.getElementById('close-mentions').onclick = function() {
       document.getElementById('mentions-popup').style.display = 'none';
     };
-
     function fetchScenarios(departement) {
       return fetch('https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec')
         .then(response => response.json())
@@ -482,11 +450,9 @@
           return [];
         });
     }
-
     async function calculerSimulation() {
       document.getElementById('loading').style.display = 'block';
       document.getElementById('loading').scrollIntoView({ behavior: 'smooth', block: 'center' });
-
       document.getElementById('recap').style.display = 'none';
       document.getElementById('resultat').style.display = 'none';
       document.getElementById('emailBloc').style.display = 'none';
@@ -494,11 +460,9 @@
       document.getElementById('temoignagesBloc').style.visibility = 'hidden';
       document.getElementById('temoignagesBloc').style.height = '0';
       masquerLienMentionsLegales();
-
       const codePostal = document.getElementById('codePostal').value.trim();
       const conso = parseFloat(document.getElementById('conso').value);
       const facture = parseFloat(document.getElementById('facture').value);
-
       if (!/^[0-9]{5}$/.test(codePostal)) {
         alert("Veuillez entrer un code postal valide.");
         return;
@@ -507,26 +471,20 @@
         alert("Merci de remplir correctement tous les champs.");
         return;
       }
-
       const departement = codePostal.substring(0, 2);
       scenarios = await fetchScenarios(departement);
       if (scenarios.length === 0) {
         alert("Aucune donnée disponible pour ce département.");
         return;
       }
-
       document.getElementById('loading').style.display = 'none';
-
-      // Calculs et affichage résultats (inchangé)
       const prixKwh = facture / conso;
       const scenario = [...scenarios].reverse().find(s => s.prod * 1.05 <= conso) || scenarios[0];
       window.selectedScenario = scenario;
       scenarios.reverse();
-
       const autoKwh = scenario.prod * 0.6;
       const stockKwh = scenario.prod * 0.4;
       const acheminement = 0.05;
-
       const factureAvant = conso * prixKwh;
       const autoValue = autoKwh * prixKwh;
       const stockValue = stockKwh * prixKwh;
@@ -534,7 +492,6 @@
       const factureApres = factureAvant - autoValue - stockValue + coutAcheminement;
       const economieAnnuelle = factureAvant - factureApres;
       const economieMensuelle = economieAnnuelle / 12;
-
       let gain15ans = 0;
       let prixActuel = prixKwh;
       for (let i = 0; i < 15; i++) {
@@ -543,11 +500,9 @@
         const coutAch = stockKwh * acheminement;
         const factureAv = conso * prixActuel;
         const factureAp = factureAv - autoVal - stockVal + coutAch;
-        const economie = factureAv - factureAp;
-        gain15ans += economie;
+        gain15ans += factureAv - factureAp;
         prixActuel *= 1.05;
       }
-
       document.getElementById('recap').innerHTML = `
         Code postal : ${codePostal}<br>
         Consommation annuelle : ${conso.toLocaleString('fr-FR')} kWh<br>
@@ -561,7 +516,6 @@
         </span>
       `;
       document.getElementById('recap').style = "display:block;visibility:visible;height:auto;padding:20px;margin:0 auto 20px auto;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e0e0;";
-
       document.getElementById('resultat').innerHTML = `
         <div class="item"><strong>Gain estimé la 1ère année :</strong> <span style="color: #2b7a0b; font-weight: bold;">${Math.round(economieAnnuelle).toLocaleString('fr-FR')}</span> €</div><br>
         <div class="item"><strong>Soit un gain par mois de :</strong> <span style="color: #2b7a0b; font-weight: bold;">${Math.round(economieMensuelle).toLocaleString('fr-FR')}</span> €</div><br>
@@ -574,15 +528,13 @@
           ⚡ Une mensualité fixe de <strong>${scenario.mensualite.toLocaleString('fr-FR', {minimumFractionDigits: 2, maximumFractionDigits: 2})} €</strong>* pour financer cette installation clé en main — et ainsi devenir propriétaire de votre production solaire.<br><br>
           ✅ Ce n’est pas une dépense en plus, c’est à la place de ce que vous payez déjà.<br><br>
           🎯 Résultat ? Vous devenez propriétaire de votre production d’électricité, tout en disant stop aux hausses de tarifs.
-      <!-- Bloc Offre Spéciale TAEG exceptionnel -->
-<div style="background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,128,0,0.06); border: 1px solid #198754; font-size: 15px; color: #175837; font-weight: normal; text-align: center; margin: 22px 0 18px 0; padding: 16px 14px 10px 14px;">
-  <strong>Pour information&nbsp;:</strong><br>
-  Offre financement exceptionnel&nbsp;:<br>
-  <span style="color: #13723a; font-size: 20px; font-weight: bold;">TAEG fixe 3,96 % sur 180 mois</span>
-  <br>
-  <span style="color: #e64c00; font-size: 13px; font-weight: 600;">Valable pour toute étude réalisée avant le <u>31 juillet 2025</u></span>
-</div>
-
+      <div style="background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,128,0,0.06); border: 1px solid #198754; font-size: 15px; color: #175837; font-weight: normal; text-align: center; margin: 22px 0 18px 0; padding: 16px 14px 10px 14px;">
+        <strong>Pour information&nbsp;:</strong><br>
+        Offre financement exceptionnel&nbsp;:<br>
+        <span style="color: #13723a; font-size: 20px; font-weight: bold;">TAEG fixe 3,96 % sur 180 mois</span>
+        <br>
+        <span style="color: #e64c00; font-size: 13px; font-weight: 600;">Valable pour toute étude réalisée avant le <u>31 juillet 2025</u></span>
+      </div>
         <div style="background:#f7f9f7; border-left:4px solid #198754; border-radius:12px; padding:14px 18px 12px 14px; margin-top:22px; font-size:16px; color:#222;">
           <span style="display:inline-block; vertical-align:middle; margin-right:8px;">
             <svg width="26" height="26" style="vertical-align:middle;" viewBox="0 0 24 24" fill="#8dc2a7"><circle cx="12" cy="12" r="12"/><text x="7" y="18" font-size="14" font-weight="bold" fill="#fff">i</text></svg>
@@ -597,17 +549,11 @@
       `;
       document.getElementById('resultat').style = "display:block;visibility:visible;height:auto;padding:20px;margin:0 auto 20px auto;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e0e0;";
       document.getElementById('emailBloc').style = "display:block;visibility:visible;height:auto;padding:20px;margin:0 auto 20px auto;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e0e0;";
-
-      // Affiche le bloc témoignages
       const bloc = document.getElementById('temoignagesBloc');
       bloc.style.display = 'block';
       bloc.style.visibility = 'visible';
       bloc.style.height = 'auto';
-
-      // Affiche le lien Mentions légales après simulation (dans le flux, pas flottant)
       afficherLienMentionsLegales();
-
-      // Activation dynamique du format téléphone (utile si emailBloc vient d'être affiché)
       var telInput = document.getElementById('telUser');
       if (telInput && !telInput.hasAttribute('data-format-listener')) {
         telInput.addEventListener('input', function(e) {
@@ -617,31 +563,50 @@
         });
         telInput.setAttribute('data-format-listener', '1');
       }
+      // ====== AJOUT ICI : enregistrement automatique ======
+      (function enregistrerSimulationAnonyme() {
+        const formData = new FormData();
+        formData.append("code_postal", codePostal);
+        formData.append("conso", conso);
+        formData.append("facture", facture);
+        formData.append("prod", scenario.prod);
+        formData.append("eco1", economieAnnuelle.toFixed(0));
+        formData.append("ecomensuelle", economieMensuelle.toFixed(0));
+        formData.append("eco15", gain15ans.toFixed(0));
+        formData.append("puissance", scenario.puissance);
+        formData.append("panneaux", scenario.panels);
+        formData.append("prix", scenario.prix);
+        formData.append("mensualite", scenario.mensualite);
+        formData.append("taeg", scenario.taeg);
+        formData.append("totalcredit", scenario.total);
+        formData.append("email", "");
+        formData.append("tel", "");
+        fetch('https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec', {
+          method: 'POST',
+          mode: 'no-cors',
+          body: formData
+        });
+      })();
+      // ========== fin de l'ajout ==========
     }
-
     function envoyerEstimation() {
       const codePostal = document.getElementById('codePostal').value.trim();
       const conso = parseFloat(document.getElementById('conso').value);
       const facture = parseFloat(document.getElementById('facture').value);
       const email = document.getElementById('emailUser').value.trim();
-      // Pour l'envoi, on enlève les espaces éventuels dans le numéro de téléphone
       const tel = document.getElementById('telUser').value.replace(/\D/g, '');
-
       if (!email) {
         alert("Merci de renseigner votre adresse email pour recevoir votre estimation.");
         return;
       }
-
       if (!selectedScenario) {
         alert("Scénario non défini. Veuillez d'abord lancer une simulation.");
         return;
       }
-
       const prixKwh = facture / conso;
       const autoKwh = selectedScenario.prod * 0.6;
       const stockKwh = selectedScenario.prod * 0.4;
       const acheminement = 0.05;
-
       const factureAvant = conso * prixKwh;
       const autoValue = autoKwh * prixKwh;
       const stockValue = stockKwh * prixKwh;
@@ -649,7 +614,6 @@
       const factureApres = factureAvant - autoValue - stockValue + coutAcheminement;
       const economieAnnuelle = factureAvant - factureApres;
       const economieMensuelle = economieAnnuelle / 12;
-
       let gain15ans = 0;
       let prixActuel = prixKwh;
       for (let i = 0; i < 15; i++) {
@@ -661,7 +625,6 @@
         gain15ans += factureAv - factureAp;
         prixActuel *= 1.05;
       }
-
       const formData = new FormData();
       formData.append("code_postal", codePostal);
       formData.append("conso", conso);
@@ -678,13 +641,11 @@
       formData.append("totalcredit", selectedScenario.total);
       formData.append("email", email);
       formData.append("tel", tel);
-
       fetch('https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec', {
         method: 'POST',
         mode: 'no-cors',
         body: formData
       });
-
       setTimeout(() => {
         const message = document.getElementById("confirmationMessage");
         message.style.display = "block";
@@ -693,8 +654,6 @@
         message.style.marginTop = "15px";
       }, 1000);
     }
-
-    // Script du compteur dynamique (inchangé)
     const baseCount = 1234;
     const startDate = new Date('2025-05-01T00:00:00Z');
     function updateCompteur() {

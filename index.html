@@ -12,10 +12,12 @@
       margin: auto;
     }
     h1 {
-      color: #2b7a0b;
+      color: #178038;
       text-align: center;
-      margin-bottom: 30px;
-      font-size: 24px;
+      font-size: 30px;
+      font-weight: 900;
+      margin-bottom: 14px;
+      line-height: 1.25;
     }
     .logo {
       display: block;
@@ -51,9 +53,10 @@
     }
     .form-section h2,
     #emailBloc h2 {
-      font-size: 18px;
-      color: #123;
-      margin-bottom: 20px;
+      font-size: 20px;
+      color: #145e39;
+      font-weight: 700;
+      margin-bottom: 14px;
     }
     .form-section input,
     .form-section button,
@@ -64,15 +67,19 @@
       margin-bottom: 15px;
       border: 2px solid #007bff;
       border-radius: 8px;
-      font-size: 16px;
+      font-size: 18px;
       box-sizing: border-box;
     }
     .form-section button,
     #emailBloc button {
-      background: #0069d9;
+      background: #198754;
       color: white;
       font-weight: bold;
       cursor: pointer;
+      font-size: 19px;
+      border-radius: 8px;
+      font-weight: 700;
+      margin-top: 5px;
     }
     .form-section button:hover,
     #emailBloc button:hover {
@@ -285,10 +292,10 @@
     <img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=4077327712591041&ev=PageView&noscript=1" />
   </noscript>
-  <!-- End Meta Pixel Code -->
 </head>
 <body>
   <img src="https://raw.githubusercontent.com/BiofranceEnergies/biofrance-images/73ba9368d7b1da286c54b1f2c4ee3ce7dc2c7497/Logo%20biofrance%20energie%20-webp.webp" alt="Logo de l'entreprise" class="logo">
+  <!-- Compteur dynamique -->
   <div style="text-align:center; margin-bottom:22px;">
     <div style="
       display:inline-block;
@@ -301,21 +308,24 @@
       <span style="color:#1a1a1a; font-size:16px; font-weight:700; display:block; margin-top:2px;">simulations réalisées depuis le 1er mai 2025</span>
     </div>
   </div>
-  <h1>En 3 secondes, découvrez votre économie et le chiffrage de votre projet solaire.</h1>
-  <div style="text-align: center; margin-bottom: 30px; font-size: 16px; color: #333;">
-    <p>
-      Notre simulateur, propulsé par une intelligence artificielle avancée, vous offre une estimation rapide, fiable et précise de vos économies solaires. En quelques secondes, obtenez une analyse complète et un calcul détaillé pour une installation clé en main. 
-    </p>
-    <p>
-      Avec Biofrance Énergie, tout est transparent et sans engagement, sans avoir à remplir de formulaire.
-    </p>
+  <!-- ACCROCHE + FORMULAIRE "BOOSTÉS" -->
+  <h1>
+    Votre économie solaire, chiffrée en <span style="color:#e64c00;">3&nbsp;secondes</span>&nbsp;!
+  </h1>
+  <div style="text-align: center; color: #1a1a1a; font-size: 18px; margin-bottom: 22px;">
+    <span style="color:#198754; font-weight: bold;">Simple, gratuit, immédiat</span> :  
+    saisissez vos infos et découvrez le <b>prix clé en main</b> de votre installation solaire.<br>
+    <span style="color:#1a8b4d;">Sans engagement, sans formulaire compliqué.</span>
   </div>
-  <div class="form-section">
-    <h2>Vos données de consommation</h2>
-    <input type="text" id="codePostal" placeholder="Votre code postal" maxlength="5">
-    <input type="number" id="conso" placeholder="Votre conso elec annuelle (kWh)">
-    <input type="number" id="facture" placeholder="Votre facture elec annuelle (€)">
-    <button id="simuler" onclick="calculerSimulation()">🔍 Lancer la simulation</button>
+  <div class="form-section" style="background: #f9fff7; border:1px solid #c8f6dc;">
+    <h2>
+      📊 Simulation personnalisée
+    </h2>
+    <input type="text" id="codePostal" placeholder="📍 Votre code postal" maxlength="5" style="font-size:18px;">
+    <input type="number" id="facture" placeholder="💶 Votre facture annuelle (€)" style="font-size:18px;">
+    <button id="simuler" onclick="calculerSimulation()">
+      🚀 Obtenir mon estimation
+    </button>
   </div>
   <div id="loading" style="display: none; text-align: center; margin-top: 20px;">
     <div class="spinner"></div>
@@ -435,6 +445,7 @@
       return fetch('https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec')
         .then(response => response.json())
         .then(data => data.filter(row => row.Departement == departement).map(row => ({
+          prixKwh: parseFloat((row.PrixKwh || '').toString().replace(',', '.').replace(/[^0-9.]/g, '')),
           puissance: row.Puissance,
           prod: parseFloat(row.Prod),
           seuil: parseFloat(row.Seuil),
@@ -461,13 +472,12 @@
       document.getElementById('temoignagesBloc').style.height = '0';
       masquerLienMentionsLegales();
       const codePostal = document.getElementById('codePostal').value.trim();
-      const conso = parseFloat(document.getElementById('conso').value);
       const facture = parseFloat(document.getElementById('facture').value);
       if (!/^[0-9]{5}$/.test(codePostal)) {
         alert("Veuillez entrer un code postal valide.");
         return;
       }
-      if (isNaN(conso) || isNaN(facture) || conso <= 0 || facture <= 0) {
+      if (isNaN(facture) || facture <= 0) {
         alert("Merci de remplir correctement tous les champs.");
         return;
       }
@@ -478,10 +488,11 @@
         return;
       }
       document.getElementById('loading').style.display = 'none';
-      const prixKwh = facture / conso;
-      const scenario = [...scenarios].reverse().find(s => s.prod * 1.05 <= conso) || scenarios[0];
+      const scenario = [...scenarios].reverse().find(s => s.prod * 1.05 <= (facture / s.prixKwh)) || scenarios[0];
       window.selectedScenario = scenario;
       scenarios.reverse();
+      const prixKwh = scenario.prixKwh;
+      const conso = facture / prixKwh;
       const autoKwh = scenario.prod * 0.6;
       const stockKwh = scenario.prod * 0.4;
       const acheminement = 0.05;
@@ -500,13 +511,14 @@
         const coutAch = stockKwh * acheminement;
         const factureAv = conso * prixActuel;
         const factureAp = factureAv - autoVal - stockVal + coutAch;
-        gain15ans += factureAv - factureAp;
+        const economie = factureAv - factureAp;
+        gain15ans += economie;
         prixActuel *= 1.05;
       }
       document.getElementById('recap').innerHTML = `
         Code postal : ${codePostal}<br>
-        Consommation annuelle : ${conso.toLocaleString('fr-FR')} kWh<br>
-        Prix du kWh TTC : ${prixKwh.toFixed(3)} €<br>
+        Consommation annuelle estimée : <strong>${Math.round(conso).toLocaleString('fr-FR')}</strong> kWh<br>
+        Prix du kWh TTC utilisé : <strong>${prixKwh.toFixed(3)}</strong> €<br>
         Facture annuelle : ${facture.toLocaleString('fr-FR')} €<br><br>
         Puissance installée : ${scenario.puissance} soit ${scenario.panels} panneaux photovoltaïques de 500 W<br><br>
         Production annuelle : <span style="color: #2b7a0b; font-weight: bold;">${scenario.prod.toLocaleString('fr-FR')}</span> kWh<br><br>
@@ -563,35 +575,31 @@
         });
         telInput.setAttribute('data-format-listener', '1');
       }
-      // ====== AJOUT ICI : enregistrement automatique ======
-      (function enregistrerSimulationAnonyme() {
-        const formData = new FormData();
-        formData.append("code_postal", codePostal);
-        formData.append("conso", conso);
-        formData.append("facture", facture);
-        formData.append("prod", scenario.prod);
-        formData.append("eco1", economieAnnuelle.toFixed(0));
-        formData.append("ecomensuelle", economieMensuelle.toFixed(0));
-        formData.append("eco15", gain15ans.toFixed(0));
-        formData.append("puissance", scenario.puissance);
-        formData.append("panneaux", scenario.panels);
-        formData.append("prix", scenario.prix);
-        formData.append("mensualite", scenario.mensualite);
-        formData.append("taeg", scenario.taeg);
-        formData.append("totalcredit", scenario.total);
-        formData.append("email", "");
-        formData.append("tel", "");
-        fetch('https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec', {
-          method: 'POST',
-          mode: 'no-cors',
-          body: formData
-        });
-      })();
-      // ========== fin de l'ajout ==========
+      // ENVOI AUTOMATIQUE VERS SHEETS (même sans email)
+      const formData = new FormData();
+      formData.append("code_postal", codePostal);
+      formData.append("conso", Math.round(conso));
+      formData.append("facture", facture);
+      formData.append("prod", scenario.prod);
+      formData.append("eco1", economieAnnuelle.toFixed(0));
+      formData.append("ecomensuelle", economieMensuelle.toFixed(0));
+      formData.append("eco15", gain15ans.toFixed(0));
+      formData.append("puissance", scenario.puissance);
+      formData.append("panneaux", scenario.panels);
+      formData.append("prix", scenario.prix);
+      formData.append("mensualite", scenario.mensualite);
+      formData.append("taeg", scenario.taeg);
+      formData.append("totalcredit", scenario.total);
+      formData.append("email", "");
+      formData.append("tel", "");
+      fetch('https://script.google.com/macros/s/AKfycbwhlyD_FMMm2g9JIQAm2Se2xehUqIM2MzWMl1YGl_gP1DJKM_-jZFj_YStDMhWi-0F8XA/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData
+      });
     }
     function envoyerEstimation() {
       const codePostal = document.getElementById('codePostal').value.trim();
-      const conso = parseFloat(document.getElementById('conso').value);
       const facture = parseFloat(document.getElementById('facture').value);
       const email = document.getElementById('emailUser').value.trim();
       const tel = document.getElementById('telUser').value.replace(/\D/g, '');
@@ -603,7 +611,8 @@
         alert("Scénario non défini. Veuillez d'abord lancer une simulation.");
         return;
       }
-      const prixKwh = facture / conso;
+      const prixKwh = selectedScenario.prixKwh;
+      const conso = facture / prixKwh;
       const autoKwh = selectedScenario.prod * 0.6;
       const stockKwh = selectedScenario.prod * 0.4;
       const acheminement = 0.05;
@@ -627,7 +636,7 @@
       }
       const formData = new FormData();
       formData.append("code_postal", codePostal);
-      formData.append("conso", conso);
+      formData.append("conso", Math.round(conso));
       formData.append("facture", facture);
       formData.append("prod", selectedScenario.prod);
       formData.append("eco1", economieAnnuelle.toFixed(0));
@@ -654,6 +663,7 @@
         message.style.marginTop = "15px";
       }, 1000);
     }
+    // Compteur dynamique
     const baseCount = 1234;
     const startDate = new Date('2025-05-01T00:00:00Z');
     function updateCompteur() {

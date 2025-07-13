@@ -295,6 +295,10 @@
 </head>
 <body>
   <img src="https://raw.githubusercontent.com/BiofranceEnergies/biofrance-images/73ba9368d7b1da286c54b1f2c4ee3ce7dc2c7497/Logo%20biofrance%20energie%20-webp.webp" alt="Logo de l'entreprise" class="logo">
+
+  <!-- Bloc géolocalisation dynamique -->
+  <div id="geo-local"></div>
+
   <!-- Compteur dynamique -->
   <div style="text-align:center; margin-bottom:22px;">
     <div style="
@@ -317,16 +321,23 @@
     saisissez vos infos et découvrez le <b>prix clé en main</b> de votre installation solaire.<br>
     <span style="color:#1a8b4d;">Sans engagement, sans formulaire compliqué.</span>
   </div>
+  <!-- ----------- FORMULAIRE AVEC KWH OPTIONNEL ----------- -->
   <div class="form-section" style="background: #f9fff7; border:1px solid #c8f6dc;">
-    <h2>
-      📊 Simulation personnalisée
-    </h2>
+    <h2>📊 Simulation personnalisée</h2>
     <input type="text" id="codePostal" placeholder=" Votre code postal" maxlength="5" style="font-size:18px;">
     <input type="number" id="facture" placeholder=" Votre facture elec /an (€)" style="font-size:18px;">
+    <div id="modeAvance" style="display:none;">
+      <input type="number" id="conso" placeholder=" Conso annuelle (kWh, optionnel)" style="font-size:18px;">
+    </div>
+    <a href="#" id="lienAvance" style="font-size:15px; color:#168b4a; text-decoration:underline; display:block; margin-bottom:10px;">
+      ➕ Vous connaissez votre consommation annuelle ? Cliquez ici pour une estimation ultra-précise
+    </a>
     <button id="simuler" onclick="calculerSimulation()">
       🔍 Obtenir mon estimation
     </button>
   </div>
+  <!-- ----------- FIN FORMULAIRE ----------- -->
+
   <div id="loading" style="display: none; text-align: center; margin-top: 20px;">
     <div class="spinner"></div>
     <p style="font-size: 14px; color: #555;">Veuillez patienter... Calcul en cours</p>
@@ -410,7 +421,33 @@
     RGPD : Vous pouvez demander la suppression de vos données à tout moment par simple email.
   </div>
   <script>
+    // Bloc géolocalisation dynamique IPAPI
+    fetch('https://ipapi.co/json/')
+      .then(response => response.json())
+      .then(data => {
+        const cp = data.postal || '';
+        const ville = data.city || '';
+        let geoTxt = '';
+        if (cp && ville) geoTxt = `Votre simulation 100% libre à <b>${cp} ${ville}</b>`;
+        else if (ville) geoTxt = `Votre simulation 100% libre à <b>${ville}</b>`;
+        else geoTxt = `Simulation solaire 100% libre et sans engagement`;
+        document.getElementById('geo-local').innerHTML =
+          `<div style="background:#fffbeb;border-radius:13px;text-align:center;padding:13px 7px 11px 7px;margin-bottom:18px;font-size:18px;color:#805f1b;font-weight:700;border:1px solid #ffe188;box-shadow:0 2px 8px rgba(255,210,0,0.03);">
+            <span style="vertical-align:middle;">📍</span> ${geoTxt}
+          </div>`;
+      }).catch(() => {});
+
     document.addEventListener("DOMContentLoaded", function() {
+      // Affichage champ kWh avancé
+      var lienAvance = document.getElementById('lienAvance');
+      if (lienAvance) {
+        lienAvance.onclick = function(e) {
+          e.preventDefault();
+          document.getElementById('modeAvance').style.display = 'block';
+          this.style.display = 'none';
+        };
+      }
+      // Cookie
       if (!localStorage.getItem("cookieConsentPV2025")) {
         document.getElementById("cookie-banner").style.display = "flex";
       }
@@ -473,6 +510,8 @@
       masquerLienMentionsLegales();
       const codePostal = document.getElementById('codePostal').value.trim();
       const facture = parseFloat(document.getElementById('facture').value);
+      const consoInput = document.getElementById('conso');
+      let conso, prixKwh;
       if (!/^[0-9]{5}$/.test(codePostal)) {
         alert("Veuillez entrer un code postal valide.");
         return;
@@ -491,8 +530,17 @@
       const scenario = [...scenarios].reverse().find(s => s.prod * 1.05 <= (facture / s.prixKwh)) || scenarios[0];
       window.selectedScenario = scenario;
       scenarios.reverse();
-      const prixKwh = scenario.prixKwh;
-      const conso = facture / prixKwh;
+      if (consoInput && consoInput.value) {
+        conso = parseFloat(consoInput.value);
+        if (isNaN(conso) || conso <= 0) {
+          alert("Merci d’indiquer une consommation kWh correcte.");
+          return;
+        }
+        prixKwh = facture / conso;
+      } else {
+        prixKwh = scenario.prixKwh;
+        conso = facture / prixKwh;
+      }
       const autoKwh = scenario.prod * 0.6;
       const stockKwh = scenario.prod * 0.4;
       const acheminement = 0.05;
@@ -603,6 +651,8 @@
       const facture = parseFloat(document.getElementById('facture').value);
       const email = document.getElementById('emailUser').value.trim();
       const tel = document.getElementById('telUser').value.replace(/\D/g, '');
+      const consoInput = document.getElementById('conso');
+      let conso, prixKwh;
       if (!email) {
         alert("Merci de renseigner votre adresse email pour recevoir votre estimation.");
         return;
@@ -611,8 +661,13 @@
         alert("Scénario non défini. Veuillez d'abord lancer une simulation.");
         return;
       }
-      const prixKwh = selectedScenario.prixKwh;
-      const conso = facture / prixKwh;
+      if (consoInput && consoInput.value) {
+        conso = parseFloat(consoInput.value);
+        prixKwh = facture / conso;
+      } else {
+        prixKwh = selectedScenario.prixKwh;
+        conso = facture / prixKwh;
+      }
       const autoKwh = selectedScenario.prod * 0.6;
       const stockKwh = selectedScenario.prod * 0.4;
       const acheminement = 0.05;

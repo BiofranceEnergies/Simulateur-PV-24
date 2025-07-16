@@ -13,6 +13,23 @@
 
   gtag('config', 'AW-11242044118');
 </script>
+<script>
+function gtag_report_conversion(url) {
+  var callback = function () {
+    if (typeof(url) != 'undefined') {
+      window.location = url;
+    }
+  };
+  gtag('event', 'conversion', {
+      'send_to': 'AW-11242044118/Jj6sCPHtj_IaENb1z_Ap',
+      'value': 1.0,
+      'currency': 'EUR',
+      'event_callback': callback
+  });
+  return false;
+}
+</script>
+
   <style>
     /* ... styles identiques à ta version ... */
     body {
@@ -366,7 +383,8 @@
     </p>
     <input type="email" id="emailUser" placeholder="Votre adresse email">
     <input type="tel" id="telUser" placeholder="Votre numéro (Facultatif)">
-    <button onclick="envoyerEstimation()">📩 Recevoir mon estimation</button>
+    <button onclick="envoyerEstimation(); gtag_report_conversion();">📩 Recevoir mon estimation</button>
+
     <p style="margin-top: 20px; font-size: 14px; line-height: 1.4; text-align: center;">
       ⭐⭐⭐⭐⭐ <strong>4,5/5 sur Google</strong> – Plus de 6400 foyers accompagnés en France.<br>
       🔒 Vos données ne seront jamais revendues. Aucun démarchage automatique.

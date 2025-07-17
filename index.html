@@ -5,33 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simulateur</title>
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-11242044118"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'AW-11242044118');
-</script>
-<script>
-function gtag_report_conversion(url) {
-  var callback = function () {
-    if (typeof(url) != 'undefined') {
-      window.location = url;
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-11242044118"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-11242044118');
+  </script>
+  <script>
+    function gtag_report_conversion(url) {
+      var callback = function () {
+        if (typeof(url) != 'undefined') {
+          window.location = url;
+        }
+      };
+      gtag('event', 'conversion', {
+          'send_to': 'AW-11242044118/Jj6sCPHtj_IaENb1z_Ap',
+          'value': 1.0,
+          'currency': 'EUR',
+          'event_callback': callback
+      });
+      return false;
     }
-  };
-  gtag('event', 'conversion', {
-      'send_to': 'AW-11242044118/Jj6sCPHtj_IaENb1z_Ap',
-      'value': 1.0,
-      'currency': 'EUR',
-      'event_callback': callback
-  });
-  return false;
-}
-</script>
-
+  </script>
   <style>
-    /* ... styles identiques à ta version ... */
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
@@ -349,9 +346,6 @@ function gtag_report_conversion(url) {
   </span>
 </div>
 
-
-
-
   <!-- ----------- FORMULAIRE AVEC KWH OPTIONNEL ----------- -->
   <div class="form-section" style="background: #f9fff7; border:1px solid #c8f6dc;">
     <h2>📊 Simulation personnalisée</h2>
@@ -514,6 +508,7 @@ function gtag_report_conversion(url) {
           return [];
         });
     }
+
     async function calculerSimulation() {
       document.getElementById('loading').style.display = 'block';
       document.getElementById('loading').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -543,10 +538,9 @@ function gtag_report_conversion(url) {
         return;
       }
       document.getElementById('loading').style.display = 'none';
-      const scenario = [...scenarios].reverse().find(s => s.prod * 1.05 <= (facture / s.prixKwh)) || scenarios[0];
-      window.selectedScenario = scenario;
-      scenarios.reverse();
-      // LOGIQUE PRIORITAIRE
+
+      // Calcul de la consommation estimée
+      let consommationEstimee;
       if (consoInput && consoInput.value) {
         conso = parseFloat(consoInput.value);
         if (isNaN(conso) || conso <= 0) {
@@ -554,10 +548,39 @@ function gtag_report_conversion(url) {
           return;
         }
         prixKwh = facture / conso;
+        consommationEstimee = conso;
       } else {
-        prixKwh = scenario.prixKwh;
-        conso = facture / prixKwh;
+        prixKwh = scenarios[0].prixKwh;
+        consommationEstimee = facture / prixKwh;
+        conso = consommationEstimee;
       }
+
+      // Vérifie si la conso < plus petite production disponible
+      const minProd = Math.min(...scenarios.map(s => s.prod));
+      if (consommationEstimee < minProd) {
+        document.getElementById('recap').innerHTML = `
+          <div style="color: #b30000; font-weight: bold; font-size: 19px; text-align: center;">
+            <span style="font-size: 30px;">⚠️</span><br>
+            <span>Votre consommation annuelle d’électricité est trop faible pour qu’une installation photovoltaïque soit conseillée dans votre cas.</span><br><br>
+            <span style="font-weight: normal; color: #1a1a1a; font-size: 15px;">
+              Investir dans une installation surdimensionnée ne serait pas pertinent : le montant économisé ne couvrirait pas le coût de l’installation.<br><br>
+              Nous privilégions la transparence : <b>nous ne recommandons pas d’installation solaire pour votre profil</b>.<br><br>
+              Si votre situation évolue ou si vous souhaitez un conseil personnalisé, contactez-nous, nous étudierons votre dossier avec attention.
+            </span>
+          </div>
+        `;
+        document.getElementById('recap').style = "display:block;visibility:visible;height:auto;padding:20px;margin:0 auto 20px auto;box-shadow:0 4px 12px rgba(0,0,0,0.1);border:1px solid #e0e0e0;";
+        document.getElementById('resultat').style.display = "none";
+        document.getElementById('emailBloc').style.display = "none";
+        document.getElementById('temoignagesBloc').style.display = "none";
+        masquerLienMentionsLegales();
+        return;
+      }
+
+      // Sélection du scénario (jamais de surdimensionnement)
+      const scenario = scenarios.find(s => s.prod <= consommationEstimee) || scenarios[0];
+      window.selectedScenario = scenario;
+
       // --- Le reste de tes calculs ne bouge pas
       const autoKwh = scenario.prod * 0.6;
       const stockKwh = scenario.prod * 0.4;
@@ -664,6 +687,7 @@ function gtag_report_conversion(url) {
         body: formData
       });
     }
+
     function envoyerEstimation() {
       const codePostal = document.getElementById('codePostal').value.trim();
       const facture = parseFloat(document.getElementById('facture').value);
@@ -679,7 +703,6 @@ function gtag_report_conversion(url) {
         alert("Scénario non défini. Veuillez d'abord lancer une simulation.");
         return;
       }
-      // RÉUTILISATION DE LA LOGIQUE : on reprend conso/prixKwh
       if (consoInput && consoInput.value) {
         conso = parseFloat(consoInput.value);
         prixKwh = facture / conso;

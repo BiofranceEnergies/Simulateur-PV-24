@@ -533,6 +533,7 @@
         });
     }
 
+    // -------- CORRECTION ICI --------
     async function calculerSimulation() {
       document.getElementById('loading').style.display = 'block';
       document.getElementById('loading').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -601,8 +602,14 @@
         return;
       }
 
-      // Sélection du scénario (jamais de surdimensionnement)
-      const scenario = scenarios.find(s => s.prod <= consommationEstimee) || scenarios[0];
+      // -------- CORRECTION DE DIMENSIONNEMENT --------
+      let scenario = scenarios
+        .filter(s => s.prod <= consommationEstimee)
+        .sort((a, b) => b.prod - a.prod)[0];
+      if (!scenario) {
+        // Si la conso est supérieure à toutes les productions, proposer la plus grosse installation dispo
+        scenario = scenarios.sort((a, b) => b.prod - a.prod)[0];
+      }
       window.selectedScenario = scenario;
 
       // --- Le reste de tes calculs ne bouge pas
@@ -711,6 +718,7 @@
         body: formData
       });
     }
+    // -------- FIN DE LA CORRECTION --------
 
     function envoyerEstimation() {
       const codePostal = document.getElementById('codePostal').value.trim();

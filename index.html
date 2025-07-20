@@ -369,7 +369,8 @@
   </div>
   <!-- ----------- FIN FORMULAIRE ----------- -->
 <!-- Bloc FAQ visible -->
-<div class="form-section">
+<div id="faqBloc" class="form-section">
+
 
 
   <h2 style="color:#178038;font-size:1.4rem;margin-bottom:18px;margin-top:0;font-weight:800;">Questions fréquentes sur la simulation solaire</h2>
@@ -573,6 +574,9 @@
 
     // -------- CORRECTION ICI --------
     async function calculerSimulation() {
+      
+      document.getElementById('faqBloc').style.display = 'none';
+
       document.getElementById('loading').style.display = 'block';
       document.getElementById('loading').scrollIntoView({ behavior: 'smooth', block: 'center' });
       document.getElementById('recap').style.display = 'none';

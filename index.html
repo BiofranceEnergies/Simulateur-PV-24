@@ -368,6 +368,41 @@
     </button>
   </div>
   <!-- ----------- FIN FORMULAIRE ----------- -->
+<!-- Bloc FAQ visible -->
+<div class="faq-section" style="
+    max-width:600px;
+    margin:40px auto 0 auto;
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    padding:26px 22px;
+    border:1px solid #e0e0e0;">
+
+  <h2 style="color:#178038;font-size:2rem;margin-bottom:18px;margin-top:0;font-weight:800;">Questions fréquentes sur la simulation solaire</h2>
+
+  <div style="margin-bottom:18px;">
+    <b>Faut-il donner ses coordonnées pour obtenir une estimation&nbsp;?</b><br>
+    Non, la simulation est gratuite et immédiate, sans aucune donnée obligatoire. L’email est uniquement demandé si vous souhaitez recevoir l’étude par mail. Le téléphone n’est jamais exigé.
+  </div>
+  <div style="margin-bottom:18px;">
+    <b>Vais-je être rappelé ou démarché si je laisse mon email ou mon numéro&nbsp;?</b><br>
+    Non. Aucun démarchage ni appel non sollicité. Vos données sont utilisées uniquement pour l’envoi de l’étude, jamais revendues.
+  </div>
+  <div style="margin-bottom:18px;">
+    <b>Le simulateur est-il vraiment fiable&nbsp;?</b><br>
+    Oui, il utilise vos données locales et les scénarios techniques les plus récents, avec une fiabilité estimée à 98 %. Il ne remplace pas une étude sur site, mais donne un chiffrage précis.
+  </div>
+  <div style="margin-bottom:18px;">
+    <b>L’étude ou l’offre de financement sont-elles payantes ou engageantes&nbsp;?</b><br>
+    Non, tout est gratuit et sans engagement. L’offre de financement est proposée à titre indicatif, aucune obligation.
+  </div>
+  <div style="margin-bottom:6px;">
+    <b>Ce simulateur fonctionne-t-il partout en France&nbsp;?</b><br>
+    Oui, il adapte les calculs à chaque code postal pour toute la France.
+  </div>
+</div>
+<!-- Fin bloc FAQ -->
+
 
   <div id="loading" style="display: none; text-align: center; margin-top: 20px;">
     <div class="spinner"></div>
@@ -463,19 +498,7 @@
     <button id="cookie-ok">OK, j’ai compris</button>
   </div>
   <!-- Bloc FAQ visible -->
-<div class="faq-section" style="max-width: 600px; margin: 32px auto; background:#f7f9f7; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.06); padding:24px;">
-  <h2 style="color:#178038; font-size: 22px; margin-bottom: 20px;">Questions fréquentes sur la simulation solaire</h2>
-  <div><strong>Faut-il donner ses coordonnées pour obtenir une estimation&nbsp;?</strong><br>
-  Non, la simulation est gratuite et immédiate, sans aucune donnée obligatoire. L’email est uniquement demandé si vous souhaitez recevoir l’étude par mail. Le téléphone n’est jamais exigé.</div><br>
-  <div><strong>Vais-je être rappelé ou démarché si je laisse mon email ou mon numéro&nbsp;?</strong><br>
-  Non. Aucun démarchage ni appel non sollicité. Vos données sont utilisées uniquement pour l’envoi de l’étude, jamais revendues.</div><br>
-  <div><strong>Le simulateur est-il vraiment fiable&nbsp;?</strong><br>
-  Oui, il utilise vos données locales et les scénarios techniques les plus récents, avec une fiabilité estimée à 98 %. Il ne remplace pas une étude sur site, mais donne un chiffrage précis.</div><br>
-  <div><strong>L’étude ou l’offre de financement sont-elles payantes ou engageantes&nbsp;?</strong><br>
-  Non, tout est gratuit et sans engagement. L’offre de financement est proposée à titre indicatif, aucune obligation.</div><br>
-  <div><strong>Ce simulateur fonctionne-t-il partout en France&nbsp;?</strong><br>
-  Oui, il adapte les calculs à chaque code postal pour toute la France.</div>
-</div>
+
 
   <div id="mentions-legales-container">
     <span id="mentions-legales-link">Mentions légales</span>
@@ -838,5 +861,56 @@
     updateCompteur();
     setInterval(updateCompteur, 1000);
   </script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Faut-il donner ses coordonnées pour obtenir une estimation ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Non, la simulation est gratuite et immédiate, sans aucune donnée obligatoire. L’email est uniquement demandé si vous souhaitez recevoir l’étude par mail. Le téléphone n’est jamais exigé."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Vais-je être rappelé ou démarché si je laisse mon email ou mon numéro ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Non. Aucun démarchage ni appel non sollicité. Vos données sont utilisées uniquement pour l’envoi de l’étude, jamais revendues."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Le simulateur est-il vraiment fiable ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui, il utilise vos données locales et les scénarios techniques les plus récents, avec une fiabilité estimée à 98 %. Il ne remplace pas une étude sur site, mais donne un chiffrage précis."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "L’étude ou l’offre de financement sont-elles payantes ou engageantes ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Non, tout est gratuit et sans engagement. L’offre de financement est proposée à titre indicatif, aucune obligation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Ce simulateur fonctionne-t-il partout en France ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui, il adapte les calculs à chaque code postal pour toute la France."
+      }
+    }
+  ]
+}
+</script>
+
+
 </body>
 </html>
